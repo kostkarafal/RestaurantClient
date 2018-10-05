@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
+        val host = R.string.hostUrl
         nav_view.setNavigationItemSelectedListener(this)
     }
 
@@ -61,15 +61,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_camera -> {
                 val user = UserService()
-                user.getUsers()
-                user.postUser()
+                //user.getUsers()
+              //  user.postUser()
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
             }
             R.id.nav_gallery -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
             }
             R.id.nav_slideshow -> {
-
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, LoginFragment()).commit()
             }
             R.id.nav_manage -> {
 
