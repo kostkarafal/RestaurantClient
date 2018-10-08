@@ -1,4 +1,24 @@
 <resources>
+    <string-array name="home_elements">
+        <item>Menu</item>
+        <item>Restaurants</item>
+        <item>Orders</item>
+    </string-array>
+    <string-array name="home_elements_description">
+        <item>Przejdz do menu</item>
+        <item>Zobacz gdzie znajduje się najbliższa restauracja</item>
+        <item>Zobacz swoje zamówienia</item>
+    </string-array>
+    <string-array name="home_elements_icons">
+        <item>ic_restaurant_menu_24dp</item>
+        <item>ic_place_24dp</item>
+        <item>ic_event_orders_24dp</item>
+    </string-array>
+    <string-array name="home_elements_images">
+        <item>menu</item>
+        <item>restaurant</item>
+        <item>orders</item>
+    </string-array>
     <string name="app_name">RestaurantClient</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
@@ -6,8 +26,7 @@
     <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="menu">Menu!</string>
-    <string name="hostUrl" translatable="false">http://192.168.8.107:8008</string>
+    <string name="menu">Menu</string>
     <string name="polish">polish</string>
     <string name="server_error">Cannot connect to server</string>
     <string name="logged_in">Logged in</string>
@@ -16,4 +35,9 @@
     <string name="password">Password:</string>
     <string name="log_in">Login</string>
     <string name="price">Price:</string>
+    <string name="title_activity_product" translatable="false">ProductActivity</string>
+    <string name="add_to_order">Add to order</string>
+    <string name="home">Home</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="orders">Orders</string>
 </resources>

@@ -33,11 +33,12 @@
 
     <Button
         android:id="@+id/buttonLogin"
+        style="@android:style/Widget.Holo.Light.Button"
         android:layout_width="224dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="149dp"
         android:layout_marginStart="147dp"
         android:layout_marginTop="37dp"
+        android:layout_marginEnd="149dp"
         android:text="@string/log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,6 +3,7 @@ package pl.kostka.restaurantclient.service
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import org.mindrot.jbcrypt.BCrypt
+import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.User
 import java.io.IOException
 
@@ -10,11 +11,12 @@ import java.io.IOException
 class UserService{
 
     companion object {
-        val hostUrl = "http://192.168.8.107:8060"
+        val hostUrl = BuildConfig.HOST_URL
         val gson = GsonBuilder().create()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
         val client = OkHttpClient()
         var loggedIn: Boolean = false
+        val string = "string"
 
         fun getUsers() {
             val request = Request.Builder()
@@ -26,6 +28,7 @@ class UserService{
                     val users = gson.fromJson(body, Array<User>::class.java).toList()
                     println(users.get(0).password)
                 }
+
 
                 override fun onFailure(call: Call?, e: IOException?) {
                     println("Failed to execute")

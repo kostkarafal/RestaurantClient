@@ -3,7 +3,7 @@
     <string name="app_name">RestaurantClient</string>
     <string name="polish">Polski</string>
     <string name="action_settings">Ustawienia</string>
-    <string name="menu">Menu!</string>
+    <string name="menu">Menu</string>
     <string name="server_error">Serwer nie odpowiada</string>
     <string name="logged_in">Zalogowano</string>
     <string name="login_failed">Zła nazwa użytkownika lub hasło</string>
@@ -11,4 +11,8 @@
     <string name="password">Hasło:</string>
     <string name="log_in">Zaloguj</string>
     <string name="price">Cena:</string>
+    <string name="add_to_order">Dodaj do zamówienia</string>
+    <string name="home">Strona główna</string>
+    <string name="restaurants">Restauracje</string>
+    <string name="orders">Zamówienia</string>
 </resources>

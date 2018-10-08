@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        val host = R.string.hostUrl
         nav_view.setNavigationItemSelectedListener(this)
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
     }
 
     override fun onBackPressed() {
@@ -59,19 +59,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                val user = UserService()
-                //user.getUsers()
-              //  user.postUser()
+            R.id.nav_home -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
             }
-            R.id.nav_gallery -> {
+            R.id.nav_menu -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_restaurants -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, LoginFragment()).commit()
             }
-            R.id.nav_manage -> {
+            R.id.nav_orders -> {
 
             }
             R.id.nav_share -> {

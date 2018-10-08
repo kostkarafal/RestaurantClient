@@ -1,5 +1,7 @@
 package pl.kostka.restaurantclient
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,8 +18,8 @@ class MenuAdapter(val menuProducts: List<Product>): RecyclerView.Adapter<CustomV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-       val layoutInflater = LayoutInflater.from(parent?.context)
-        val cellForRow = layoutInflater.inflate(R.layout.menu_row, parent, false)
+       val layoutInflater = LayoutInflater.from(parent.context)
+        val cellForRow = layoutInflater.inflate(R.layout.menu_row_outside, parent, false)
         return CustomViewHolder(cellForRow)
     }
 
@@ -25,13 +27,21 @@ class MenuAdapter(val menuProducts: List<Product>): RecyclerView.Adapter<CustomV
         val product = menuProducts.get(position)
         holder.view.textView_productName?.text = product.name
         holder.view.textView_productDescription?.text = product.description
-        holder.view.textView_priceAmount?.text = product.price.toString()
-
+        holder.view.textView_priceAmount?.text = String.format("%.2f", product.price)
         val imageView = holder.view.imageView_product
-        Picasso.with(holder.view.context).load("http://192.168.8.107:8060/downloadFile/" + product.imageId.toString()).into(imageView)
+        Picasso.with(holder.view.context).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
     }
 }
 
 class CustomViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
+    init {
+        view.setOnClickListener {
+            println("test")
+
+            val intent = Intent(view.context, ProductActivity::class.java)
+
+            view.context.startActivity(intent)
+        }
+    }
 }
