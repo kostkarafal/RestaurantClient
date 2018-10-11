@@ -1,10 +1,11 @@
 package pl.kostka.restaurantclient.model
 
 import pl.kostka.restaurantclient.model.enums.ProductType
+import java.io.Serializable
 
-class Product(val id: Long,
-              val name: String,
-              val description: String,
-              val type: ProductType,
-              val price: Float,
-              val imageId: Long)
+data class Product(var id: Long,
+              var name: String,
+                   var description: String,
+                   var type: ProductType,
+                   var price: Float,
+                   var imageId: Long) : Serializable

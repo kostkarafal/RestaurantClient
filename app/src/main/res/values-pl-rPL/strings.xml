@@ -15,4 +15,14 @@
     <string name="home">Strona główna</string>
     <string name="restaurants">Restauracje</string>
     <string name="orders">Zamówienia</string>
+    <string name="category_colon">Kategoria:</string>
+    <string name="all">Wszystko</string>
+    <string name="Burger">Burgery</string>
+    <string name="Wrap">Wrapy</string>
+    <string name="Pizza">Pizza</string>
+    <string name="cold_drinks">Zimne napoje</string>
+    <string name="coffee_tea">Kawa, herbata</string>
+    <string name="salad">Sałatki</string>
+    <string name="order">Zamówienie</string>
+    <string name="confirm_order">Potwierdź zamówienie</string>
 </resources>

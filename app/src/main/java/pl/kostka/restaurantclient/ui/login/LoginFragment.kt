@@ -1,4 +1,4 @@
-package pl.kostka.restaurantclient
+package pl.kostka.restaurantclient.ui.login
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_login.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.service.UserService
 import java.io.IOException
 

@@ -1,18 +1,15 @@
-package pl.kostka.restaurantclient
+package pl.kostka.restaurantclient.ui.main
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.support.v4.app.FragmentManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.main_row.view.*
-import kotlinx.android.synthetic.main.menu_row.view.*
+import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.HomeElement
-import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.ui.menu.MenuFragment
+import pl.kostka.restaurantclient.ui.restaurants.RestaurantsFragment
 
 class MainAdapter(val homeElements: List<HomeElement>,val fragmentManager: FragmentManager): RecyclerView.Adapter<MainViewHolder>() {
 
@@ -40,9 +37,14 @@ class MainViewHolder(val view: View, val fragmentManager: FragmentManager): Recy
 
     init {
         view.setOnClickListener {
-            if (view.textView_main_name.text.equals("Menu")) {
-                fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+
+            when(view.textView_main_name.text) {
+                "Menu" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+                "Restaurants" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, RestaurantsFragment()).commit()
             }
+//            if (view.textView_main_name.text.equals("Menu")) {
+//                fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+//            }
         }
     }
 }

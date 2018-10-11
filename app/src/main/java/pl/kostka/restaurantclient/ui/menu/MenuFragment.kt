@@ -1,6 +1,8 @@
-package pl.kostka.restaurantclient
+package pl.kostka.restaurantclient.ui.menu
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -11,8 +13,11 @@ import kotlinx.android.synthetic.main.content_menu.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
+import pl.kostka.restaurantclient.ui.order.OrderActivity
+import pl.kostka.restaurantclient.ui.product.ProductActivity
 import java.io.IOException
 
 class MenuFragment: Fragment(){
@@ -37,6 +42,12 @@ class MenuFragment: Fragment(){
             }
         })
 
+        val floatingButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        floatingButton.setOnClickListener {
+            val intent = Intent(view.context, OrderActivity::class.java)
+
+            view.context.startActivity(intent)
+        }
         return view
     }
 

@@ -19,6 +19,17 @@
         <item>restaurant</item>
         <item>orders</item>
     </string-array>
+
+    <string-array name="category_array">
+        <item>@string/all</item>
+        <item>@string/Burger</item>
+        <item>@string/Wrap</item>
+        <item>@string/Pizza</item>
+        <item>@string/salad</item>
+        <item>@string/cold_drinks</item>
+        <item>@string/coffee_tea</item>
+    </string-array>
+
     <string name="app_name">RestaurantClient</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
@@ -40,4 +51,16 @@
     <string name="home">Home</string>
     <string name="restaurants">Restaurants</string>
     <string name="orders">Orders</string>
+    <string name="category_colon">Category:</string>
+    <string name="all">All</string>
+    <string name="Burger">Burger</string>
+    <string name="Wrap">Wrap</string>
+    <string name="Pizza">Pizza</string>
+    <string name="cold_drinks">Cold drinks</string>
+    <string name="coffee_tea">Coffee, tea</string>
+    <string name="salad">Salad</string>
+    <string name="title_activity_restaurants" translatable="false">RestaurantsActivity</string>
+    <string name="order">Order</string>
+    <string name="confirm_order">Confirm order</string>
+
 </resources>
