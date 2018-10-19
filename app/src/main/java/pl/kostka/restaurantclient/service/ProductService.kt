@@ -5,7 +5,7 @@ import okhttp3.*
 import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
-import pl.kostka.restaurantclient.service.callback.GetMenuCallback
+import pl.kostka.restaurantclient.service.callback.ProductListCallback
 import java.io.IOException
 
 class ProductService {
@@ -15,7 +15,7 @@ class ProductService {
         private val mediaType = MediaType.parse("application/json; charset=utf-8")
         private val client = OkHttpClient()
 
-        fun getMenu(callback: GetMenuCallback) {
+        fun getMenu(callback: ProductListCallback) {
             JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
                 override fun onResponse(accesToken: String) {
                     val request = Request.Builder()

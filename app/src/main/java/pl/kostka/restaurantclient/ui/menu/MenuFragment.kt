@@ -10,17 +10,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.content_menu.*
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
-import pl.kostka.restaurantclient.service.callback.GetMenuCallback
+import pl.kostka.restaurantclient.service.callback.ProductListCallback
 import pl.kostka.restaurantclient.ui.order.OrderActivity
-import pl.kostka.restaurantclient.ui.product.ProductActivity
-import java.io.IOException
+
 
 class MenuFragment: Fragment(){
 
@@ -31,7 +26,7 @@ class MenuFragment: Fragment(){
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
 
-        ProductService.getMenu(object : GetMenuCallback{
+        ProductService.getMenu(object : ProductListCallback{
             override fun onResponse(menu: List<Product>) {
                 activity?.runOnUiThread {
                     recyclerView.adapter = MenuAdapter(menu)
