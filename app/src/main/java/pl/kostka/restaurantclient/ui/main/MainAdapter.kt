@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.main_row.view.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.HomeElement
+import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
 import pl.kostka.restaurantclient.ui.restaurants.RestaurantsFragment
 

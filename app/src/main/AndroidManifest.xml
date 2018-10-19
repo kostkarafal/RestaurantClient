@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
@@ -47,10 +51,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC4ghw3o6wHUKDpc6K-ka5OuhkhDr3UPYE" />
 
-        <activity android:name=".ui.order.OrderActivity"
+        <activity
+            android:name=".ui.order.OrderActivity"
             android:label="@string/order"
-            android:parentActivityName=".ui.order.OrderActivity"
-            >
+            android:parentActivityName=".ui.order.OrderActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".ui.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />

@@ -3,6 +3,7 @@ package pl.kostka.restaurantclient.ui.menu
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,7 @@ import okhttp3.Response
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
+import pl.kostka.restaurantclient.service.callback.GetMenuCallback
 import pl.kostka.restaurantclient.ui.order.OrderActivity
 import pl.kostka.restaurantclient.ui.product.ProductActivity
 import java.io.IOException
@@ -28,17 +30,16 @@ class MenuFragment: Fragment(){
 
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        ProductService.getMenu().enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                var body = response?.body()?.string()
-                val menu = ProductService.gson.fromJson(body, Array<Product>::class.java).toList()
+
+        ProductService.getMenu(object : GetMenuCallback{
+            override fun onResponse(menu: List<Product>) {
                 activity?.runOnUiThread {
                     recyclerView.adapter = MenuAdapter(menu)
                 }
             }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute")
+            override fun onFailure(errMessage: String) {
+                Snackbar.make(view, "Błedny użytkownik lub hasło", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
             }
         })
 

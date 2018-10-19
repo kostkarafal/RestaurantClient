@@ -1,7 +1,6 @@
 package pl.kostka.restaurantclient.ui.login
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.content_login.*
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import pl.kostka.restaurantclient.R
-import pl.kostka.restaurantclient.service.UserService
-import java.io.IOException
+import pl.kostka.restaurantclient.service.JwtService
+import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 
 
 class LoginFragment: Fragment(){
@@ -24,35 +20,26 @@ class LoginFragment: Fragment(){
 
         val buttonLogin = view.findViewById<Button>(R.id.buttonLogin)
         buttonLogin.setOnClickListener {
-             UserService.login(editTextLogin.text.toString(), editTextPassword.text.toString())
-                     .enqueue(object : Callback {
-                         override fun onResponse(call: Call?, response: Response?) {
-                             val body = response?.body()?.string()
-                             if(body.equals("true")) {
-                                 Snackbar.make(view, "Zalogowano", Snackbar.LENGTH_LONG)
-                                         .setAction("Action", null).show()
-                             } else {
-                                activity?.runOnUiThread {
-                                    Toast.makeText(this@LoginFragment.context, "testtttt", Toast.LENGTH_LONG).show()
-                                }
-                                 Snackbar.make(view, "Błedny użytkownik lub hasło", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show()
-                             }
-                         }
+            JwtService.login(editTextLogin.text.toString(),editTextPassword.text.toString(), object: LoginResponseCallback {
+                override fun onResponse() {
+                    activity?.runOnUiThread {
+                        Toast.makeText(this@LoginFragment.context, "Zalogowano", Toast.LENGTH_LONG).show()
+                    }
+                }
 
-                         override fun onFailure(call: Call?, e: IOException?) {
-                             Snackbar.make(view, "Serwer nie odpowiada", Snackbar.LENGTH_LONG)
-                                     .setAction("Action", null).show()
-                             println("Failed to execute")
-                         }
-                     })
-          // Toast.makeText(container?.context, toastMessage, Toast.LENGTH_LONG).show()
-//               Snackbar.make(container?.rootView!!, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//            println("test33333333333333333333")
+                override fun onFailure(errMessage: String?) {
+                    if (errMessage == null) {
+                        activity?.runOnUiThread {
+                            Toast.makeText(this@LoginFragment.context, "Błąd połączenia z serwerem", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        activity?.runOnUiThread {
+                            Toast.makeText(this@LoginFragment.context, "Błedny użytkownik lub hasło", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            })
         }
-
-        println("testtttt2222222222222222222222")
         return view
     }
 

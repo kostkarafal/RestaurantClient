@@ -1,6 +1,7 @@
 package pl.kostka.restaurantclient.ui.product
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import com.squareup.picasso.Picasso
 
@@ -22,6 +23,10 @@ class ProductActivity : AppCompatActivity() {
         textView_product_price.text = String.format("%.2f", product.price)
         val imageView = imageView_product_image
         Picasso.with(applicationContext).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
+
+//        Snackbar.make(view, "Błedny użytkownik lub hasło", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+
     }
 
 }
