@@ -1,6 +1,8 @@
 package pl.kostka.restaurantclient.ui.menu
 
+import android.app.Activity
 import android.content.Intent
+import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +16,7 @@ import pl.kostka.restaurantclient.ui.product.ProductActivity
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 
-class MenuAdapter(val menuProducts: List<Product>): RecyclerView.Adapter<CustomViewHolder>() {
+class MenuAdapter(val menuProducts: List<Product>, val fragment:Fragment): RecyclerView.Adapter<CustomViewHolder>() {
 
     var categoryFlag: Boolean = false
     var position: Int = 0
@@ -33,7 +35,7 @@ class MenuAdapter(val menuProducts: List<Product>): RecyclerView.Adapter<CustomV
         else
             cellForRow = layoutInflater.inflate(R.layout.menu_row_outside, parent, false)
 
-        return CustomViewHolder(cellForRow)
+        return CustomViewHolder(cellForRow, fragment)
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
@@ -63,15 +65,15 @@ class MenuAdapter(val menuProducts: List<Product>): RecyclerView.Adapter<CustomV
     }
 }
 
-class CustomViewHolder(val view: View, var product: Product? = null): RecyclerView.ViewHolder(view) {
+class CustomViewHolder(val view: View, val fragment: Fragment, var product: Product? = null): RecyclerView.ViewHolder(view) {
 
     init {
         view.setOnClickListener {
             if(product != null){
                 val intent = Intent(view.context, ProductActivity::class.java)
                 intent.putExtra("Product",product)
-
-                view.context.startActivity(intent)
+                fragment.startActivityForResult(intent, 1)
+                //view.context.startActivity(intent)
 
             }
         }

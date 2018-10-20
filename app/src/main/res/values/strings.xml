@@ -75,5 +75,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="undo">Undo</string>
+    <string name="AddedItemToBasket">Added item to basket</string>
+    <string name="total">Total</string>
 
 </resources>

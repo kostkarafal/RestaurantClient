@@ -3,8 +3,10 @@ package pl.kostka.restaurantclient.service
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import pl.kostka.restaurantclient.BuildConfig
+import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.service.callback.BasketCallback
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.OrderCallback
 import pl.kostka.restaurantclient.service.callback.OrderListCallback
@@ -25,11 +27,11 @@ class OrderService {
             return client.newCall(request)
         }
 
-        fun addProductToBasket(products: List<Product>, callback: OrderCallback) {
+        fun addProductToBasket(products: List<Long>, callback: OrderCallback) {
             JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
                 override fun onResponse(accesToken: String) {
                     val request = Request.Builder()
-                            .url("${OrderService.hostUrl}/orders/basket")
+                            .url("${OrderService.hostUrl}/orders/restaurants/4/basket")//TODO handle restaurant id
                             .post(RequestBody.create(mediaType, gson.toJson(products)))
                             .addHeader("Authorization", "bearer $accesToken").build()
 
@@ -52,7 +54,7 @@ class OrderService {
         }
 
 
-        fun getBasket(callback: OrderCallback) {
+        fun getBasket(callback: BasketCallback) {
             JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
                 override fun onResponse(accesToken: String) {
                     val request = Request.Builder()
@@ -63,8 +65,8 @@ class OrderService {
                     OrderService.client.newCall(request).enqueue(object : Callback {
                         override fun onResponse(call: Call?, response: Response?) {
                             var body = response?.body()?.string()
-                            val order = OrderService.gson.fromJson(body, Order::class.java)
-                            callback.onResponse(order)
+                            val basket = OrderService.gson.fromJson(body, Basket::class.java)
+                            callback.onResponse(basket)
                         }
 
                         override fun onFailure(call: Call, e: IOException) {

@@ -16,10 +16,9 @@ class ProductService {
         private val client = OkHttpClient()
 
         fun getMenu(callback: ProductListCallback) {
-            JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
-                override fun onResponse(accesToken: String) {
                     val request = Request.Builder()
-                            .url("$hostUrl/products").get().addHeader("Authorization", "bearer $accesToken").build()
+                            .url("$hostUrl/products").get().build()
+
                     client.newCall(request).enqueue(object : Callback {
                         override fun onResponse(call: Call?, response: Response?) {
                             var body = response?.body()?.string()
@@ -31,12 +30,7 @@ class ProductService {
                             callback.onFailure("Błąd połączenia z serwerem")
                         }
                     })
-                }
 
-                override fun onFailure(errMessage: String) {
-                    callback.onFailure(errMessage)
-                }
-            })
         }
 
     }

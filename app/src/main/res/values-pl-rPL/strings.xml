@@ -25,4 +25,7 @@
     <string name="salad">Sałatki</string>
     <string name="order">Zamówienie</string>
     <string name="confirm_order">Potwierdź zamówienie</string>
+    <string name="undo">Wycofaj</string>
+    <string name="AddedItemToBasket">Dodano produkt do koszyka</string>
+    <string name="total">Łącznie</string>
 </resources>
