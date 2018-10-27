@@ -83,5 +83,6 @@
     <string name="ok" translatable="false">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="empty_basket">Basket is empty!</string>
+    <string name="basket">Basket</string>
 
 </resources>

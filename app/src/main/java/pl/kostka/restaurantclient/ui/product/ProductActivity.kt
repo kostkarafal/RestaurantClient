@@ -34,7 +34,7 @@ class ProductActivity : AppCompatActivity() {
         textView_product_price.text = String.format("%.2f", product.price)
         val imageView = imageView_product_image
         Picasso.with(applicationContext).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
-        val fragment = this@ProductActivity
+        val fragment = this@ProductActivity //TODO handle adding more than one product
         val productList: List<Long> = longArrayOf(product.id).toList()
 
         buttonAddToOrder.setOnClickListener {

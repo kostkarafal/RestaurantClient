@@ -18,39 +18,29 @@ import pl.kostka.restaurantclient.model.Product
 
 class MenuAdapter(val menuProducts: List<Product>, val fragment:Fragment): RecyclerView.Adapter<CustomViewHolder>() {
 
-    var categoryFlag: Boolean = false
-    var position: Int = 0
     override fun getItemCount(): Int {
-        return menuProducts.size + 1
+        return menuProducts.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
        val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow: View
-        if (!categoryFlag) {
-            categoryFlag = true
-            cellForRow = layoutInflater.inflate(R.layout.menu_category_row, parent, false)
-
-        }
-        else
-            cellForRow = layoutInflater.inflate(R.layout.menu_row_outside, parent, false)
-
+        cellForRow = layoutInflater.inflate(R.layout.menu_row_outside, parent, false)
         return CustomViewHolder(cellForRow, fragment)
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        this.position = position
-        if(position > 0) {
-            val product = menuProducts.get(position - 1)
+
+
+            val product = menuProducts.get(position)
             holder.view.textView_productName?.text = product.name
             holder.view.textView_productDescription?.text = product.description
             holder.view.textView_priceAmount?.text = String.format("%.2f", product.price)
             val imageView = holder.view.imageView_product
             Picasso.with(holder.view.context).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
             holder.product = product
-        } else {
-            val spinner: Spinner = holder.view.findViewById(R.id.spinner2)
 
+/*            val spinner: Spinner = holder.view.findViewById(R.id.spinner2)
             ArrayAdapter.createFromResource(
                     holder.view.context,
                     R.array.category_array,
@@ -60,8 +50,8 @@ class MenuAdapter(val menuProducts: List<Product>, val fragment:Fragment): Recyc
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 // Apply the adapter to the spinner
                 spinner.adapter = adapter
-            }
-        }
+            }*/
+
     }
 }
 
