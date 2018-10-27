@@ -28,4 +28,8 @@
     <string name="undo">Wycofaj</string>
     <string name="AddedItemToBasket">Dodano produkt do koszyka</string>
     <string name="total">Łącznie</string>
+    <string name="change_amount">Zmień ilość</string>
+    <string name="title">Tytuł</string>
+    <string name="cancel">Anuluj</string>
+    <string name="empty_basket">Koszyk jest pusty!</string>
 </resources>

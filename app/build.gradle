@@ -14,14 +14,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         debug {
-            buildConfigField("String", "HOST_URL", '"http://192.168.8.107:8060"')
+            buildConfigField("String", "HOST_URL", '"http://192.168.8.114:8060"')
+//            buildConfigField("String", "HOST_URL", '"https://restaurant-server-app.herokuapp.com"')
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "HOST_URL", '"http://192.168.8.107:8060"')
+            buildConfigField("String", "HOST_URL", '"http://192.168.8.114:8060"')
         }
     }
 }

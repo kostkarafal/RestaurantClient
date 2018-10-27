@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_order.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Basket
@@ -18,19 +21,36 @@ class OrderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_order)
+        val totalPrice = findViewById<TextView>(R.id.textView_order_total_price)
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        OrderService.getBasket(object: BasketCallback{
-            override fun onResponse(basket: Basket) {
-                recyclerView.adapter = OrderAdapter(basket, this@OrderActivity)
-            }
 
-            override fun onFailure(errMessage: String) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+        val basket = OrderService.getBasket()
+
+        if(basket.products.size == 0) {
+            container_order_summary.visibility = View.INVISIBLE
+            textView_order_empty_basket.visibility = View.VISIBLE
+        } else {
+            totalPrice?.text = String.format("%.2f",basket.totalPrize)
+            recyclerView.adapter = OrderAdapter(OrderService.getBasket(),this@OrderActivity)
+        }
+
 
         button_confirmOrder.setOnClickListener {
+            OrderService.makeOrder(object: OrderCallback {
+                override fun onResponse(order: Order) {
+                    runOnUiThread {
+                        Toast.makeText(this@OrderActivity, "Udało sie", Toast.LENGTH_LONG).show()
+                    }
 
+                }
+
+                override fun onFailure(errMessage: String) {
+                    runOnUiThread {
+                        Toast.makeText(this@OrderActivity, errMessage, Toast.LENGTH_LONG).show()
+                    }
+
+                }
+            })
         }
     }
 }

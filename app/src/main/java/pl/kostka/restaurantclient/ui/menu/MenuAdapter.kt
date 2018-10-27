@@ -47,7 +47,7 @@ class MenuAdapter(val menuProducts: List<Product>, val fragment:Fragment): Recyc
             holder.view.textView_priceAmount?.text = String.format("%.2f", product.price)
             val imageView = holder.view.imageView_product
             Picasso.with(holder.view.context).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
-            holder?.product = product
+            holder.product = product
         } else {
             val spinner: Spinner = holder.view.findViewById(R.id.spinner2)
 

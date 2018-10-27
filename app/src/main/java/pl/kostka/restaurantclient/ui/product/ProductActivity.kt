@@ -38,15 +38,9 @@ class ProductActivity : AppCompatActivity() {
         val productList: List<Long> = longArrayOf(product.id).toList()
 
         buttonAddToOrder.setOnClickListener {
-            OrderService.addProductToBasket(productList, object: OrderCallback {
-                override fun onResponse(order: Order) {
-                   fragment.setResult(Activity.RESULT_OK)
-                   fragment.finish()
-                }
-                override fun onFailure(errMessage: String) {
-                        Toast.makeText(this@ProductActivity, errMessage, Toast.LENGTH_LONG).show()
-                }
-            })
+            OrderService.addProductToBasket(product)
+            this@ProductActivity.setResult(Activity.RESULT_OK)
+            this@ProductActivity.finish()
         }
 
         buttonBack.setOnClickListener {
