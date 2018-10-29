@@ -8,8 +8,7 @@ import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.ProductListCallback
 import java.io.IOException
 
-class ProductService {
-    companion object {
+object ProductService {
         private const val hostUrl = BuildConfig.HOST_URL
         private val gson = GsonBuilder().create()
         private val mediaType = MediaType.parse("application/json; charset=utf-8")
@@ -32,6 +31,4 @@ class ProductService {
                     })
 
         }
-
-    }
 }

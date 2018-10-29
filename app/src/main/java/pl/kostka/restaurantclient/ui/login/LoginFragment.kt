@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.content_login.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
+import pl.kostka.restaurantclient.ui.main.MainFragment
 
 
 class LoginFragment: Fragment(){
@@ -25,7 +26,7 @@ class LoginFragment: Fragment(){
             JwtService.login(editTextLogin.text.toString(),editTextPassword.text.toString(), object: LoginResponseCallback {
                 override fun onResponse() {
                     activity?.runOnUiThread {
-                        Toast.makeText(this@LoginFragment.context, "Zalogowano", Toast.LENGTH_LONG).show()
+                        fragmentManager?.beginTransaction()?.replace(R.id.fragment_container, MainFragment())?.commit()
                     }
                     progressBar.visibility = View.INVISIBLE
                 }

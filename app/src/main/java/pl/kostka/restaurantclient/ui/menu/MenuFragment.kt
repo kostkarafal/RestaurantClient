@@ -17,7 +17,7 @@ import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
 import pl.kostka.restaurantclient.service.callback.ProductListCallback
-import pl.kostka.restaurantclient.ui.basket.OrdersActivity
+import pl.kostka.restaurantclient.ui.basket.BasketActivity
 
 
 class MenuFragment: Fragment(){
@@ -45,7 +45,7 @@ class MenuFragment: Fragment(){
         })
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         floatingButton.setOnClickListener {
-            val intent = Intent(view.context, OrdersActivity::class.java)
+            val intent = Intent(view.context, BasketActivity::class.java)
 
             view.context.startActivity(intent)
         }

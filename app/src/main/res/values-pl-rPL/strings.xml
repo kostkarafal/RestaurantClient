@@ -33,4 +33,13 @@
     <string name="cancel">Anuluj</string>
     <string name="empty_basket">Koszyk jest pusty!</string>
     <string name="basket">Koszyk</string>
+    <string name="canceled">Anulowano</string>
+    <string name="confirmed">Potwierdzono</string>
+    <string name="processing">Trwa przygotowanie</string>
+    <string name="delivery">W dostawie</string>
+    <string name="completed">Zakończono</string>
+    <string name="my_account">Moje konto</string>
+    <string name="log_out">Wyloguj</string>
+    <string name="logged_out">Wylogowano</string>
+    <string name="register">Zarejestruj</string>
 </resources>

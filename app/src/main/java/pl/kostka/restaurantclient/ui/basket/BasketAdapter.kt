@@ -89,6 +89,7 @@ class BasketAdapter(val basket: Basket, val activity: Activity): RecyclerView.Ad
                 notifyItemRangeChanged(removeIndex, basket.products.size)
                 if(basket.products.size == 0) {
                     activity.container_basket_summary.visibility = View.INVISIBLE
+                    activity.button_basket_confirm_order.visibility = View.INVISIBLE
                     activity.textView_basket_empty.visibility = View.VISIBLE
                 }
             } else {

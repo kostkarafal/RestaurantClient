@@ -5,11 +5,18 @@ import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 import java.util.*
+import kotlin.properties.Delegates
 
-class JwtService {
+object JwtService {
 
-    companion object {
-        var isLoggedIn: Boolean = false
+        var listener: IsLoggdInListener? = null
+        var isLoggedIn: Boolean by Delegates.observable(
+                initialValue = false,
+                onChange = {
+                    property, oldValue, newValue ->
+                    listener?.onChange(newValue)
+                }
+        )
         private var accessToken: String = ""
         private var refreshToken: String = ""
         private var expiredAt: Date = Date()
@@ -18,6 +25,9 @@ class JwtService {
         private const val clientSecret = "clientsecret"
         private const val scope = "read"
 
+        fun setLoggedInListener(listener: IsLoggdInListener){
+            this.listener = listener
+        }
 
         fun login(username: String, password: String, callback: LoginResponseCallback){
             OAuth2Client.Builder(username, password, clientId, clientSecret, hostUrl)
@@ -36,6 +46,13 @@ class JwtService {
                     callback.onFailure(errorMsg)
                 }
             }
+        }
+
+        fun logout(){
+            refreshToken = ""
+            accessToken = ""
+            isLoggedIn = false
+            expiredAt = Date()
         }
 
         fun getAuthorizationHeader(callback: GetAuthHeaderCallback) {
@@ -79,5 +96,5 @@ class JwtService {
                             }
                         }
         }
-    }
+
 }

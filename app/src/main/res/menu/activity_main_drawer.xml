@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -25,14 +26,22 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_login"
+                android:icon="@drawable/ic_login_24dp"
+                android:title="@string/log_in" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_register"
+                android:icon="@drawable/ic_add_black_24dp"
+                android:title="@string/register"
+                android:visible="false" />
+            <item
+                android:id="@+id/nav_my_account"
+                android:icon="@drawable/ic_person_24dp"
+                android:title="@string/my_account" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_logout_24dp"
+                android:title="@string/log_out" />
         </menu>
     </item>
-
 </menu>

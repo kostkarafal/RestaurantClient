@@ -8,10 +8,8 @@ import pl.kostka.restaurantclient.model.User
 import java.io.IOException
 
 
-class UserService{
-
-    companion object {
-        val hostUrl = BuildConfig.HOST_URL
+object UserService{
+     val hostUrl = BuildConfig.HOST_URL
         val gson = GsonBuilder().create()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
         val client = OkHttpClient()
@@ -67,5 +65,4 @@ class UserService{
                     .post(RequestBody.create(mediaType, gson.toJson(user))).build())
 
         }
-    }
 }

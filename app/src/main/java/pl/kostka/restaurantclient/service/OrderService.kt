@@ -1,6 +1,5 @@
 package pl.kostka.restaurantclient.service
 
-import android.databinding.BindingAdapter
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import pl.kostka.restaurantclient.BuildConfig
@@ -14,8 +13,7 @@ import pl.kostka.restaurantclient.service.callback.OrderCallback
 import pl.kostka.restaurantclient.service.callback.OrderListCallback
 import java.io.IOException
 
-class OrderService {
-    companion object {
+object OrderService {
         val hostUrl = BuildConfig.HOST_URL
         val gson = GsonBuilder().create()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
@@ -29,7 +27,6 @@ class OrderService {
             return client.newCall(request)
         }
 
-        @BindingAdapter
         fun getBasket(): Basket {
             return basket
         }
@@ -88,14 +85,6 @@ class OrderService {
 
         }
 
-        private fun refreshTotalPrice() {
-            basket.totalPrize = 0f
-            for (i in 0 until basket.products.size) {
-                basket.totalPrize += basket.products[i].price * basket.productsAmount[i]
-            }
-        }
-
-
         fun getOrderHistory(callback: OrderListCallback) {
             JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
                 override fun onResponse(accesToken: String) {
@@ -122,5 +111,11 @@ class OrderService {
                 }
             })
         }
-    }
+
+        private fun refreshTotalPrice() {
+            basket.totalPrize = 0f
+            for (i in 0 until basket.products.size) {
+                basket.totalPrize += basket.products[i].price * basket.productsAmount[i]
+            }
+        }
 }

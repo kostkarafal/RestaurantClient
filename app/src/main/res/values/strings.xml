@@ -84,5 +84,14 @@
     <string name="cancel">Cancel</string>
     <string name="empty_basket">Basket is empty!</string>
     <string name="basket">Basket</string>
+    <string name="canceled">Canceled</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="processing">Processing</string>
+    <string name="delivery">In delivery</string>
+    <string name="completed">Completed</string>
+    <string name="my_account">My account</string>
+    <string name="log_out">Logout</string>
+    <string name="logged_out">Logged out</string>
+    <string name="register">Register</string>
 
 </resources>
