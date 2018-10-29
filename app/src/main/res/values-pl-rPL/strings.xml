@@ -42,4 +42,9 @@
     <string name="log_out">Wyloguj</string>
     <string name="logged_out">Wylogowano</string>
     <string name="register">Zarejestruj</string>
+    <string name="phone_number">Nr. tel</string>
+    <string name="surname">Nazwisko:</string>
+    <string name="name">Imię:</string>
+    <string name="username">Nazwa użytkownika:</string>
+    <string name="confirm_password">Potwierdź hasło:</string>
 </resources>

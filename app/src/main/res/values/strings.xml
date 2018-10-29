@@ -93,5 +93,11 @@
     <string name="log_out">Logout</string>
     <string name="logged_out">Logged out</string>
     <string name="register">Register</string>
+    <string name="username">Username:</string>
+    <string name="name">Name:</string>
+    <string name="surname">Surname:</string>
+    <string name="phone_number">Phone number:</string>
+    <string name="email" translatable="false">E-mail:</string>
+    <string name="confirm_password">Confirm password:</string>
 
 </resources>

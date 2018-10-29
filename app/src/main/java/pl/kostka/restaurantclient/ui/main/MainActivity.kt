@@ -17,6 +17,7 @@ import pl.kostka.restaurantclient.ui.login.LoginFragment
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.service.IsLoggdInListener
 import pl.kostka.restaurantclient.service.JwtService
+import pl.kostka.restaurantclient.ui.login.RegisterFragment
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
 import pl.kostka.restaurantclient.ui.orders.OrdersFragment
 import pl.kostka.restaurantclient.ui.restaurants.RestaurantsFragment
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
             }
             R.id.nav_register -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, RegisterFragment()).commit()
             }
         }
 
