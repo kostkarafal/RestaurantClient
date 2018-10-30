@@ -53,46 +53,21 @@ object UserService{
                 })
     }
 
-        fun getUsers() {
-            val request = Request.Builder()
-                    .url("$hostUrl/users").get().build()
+    fun checkIfEmailIsFree(email: String, callback: BooleanCallback) {
+        client.newCall(Request.Builder().url("$hostUrl/users/check-email")
+                .post(RequestBody.create(mediaType, email)).build())
+                .enqueue(object : Callback {
+                    override fun onResponse(call: Call?, response: Response?) {
+                        val body = response?.body()?.string()
+                        val result = gson.fromJson(body, Boolean::class.java)
+                        callback.onResponse(result)
+                    }
 
-            client.newCall(request).enqueue(object : Callback {
-                override fun onResponse(call: Call?, response: Response?) {
-                    val body = response?.body()?.string()
-                    val users = gson.fromJson(body, Array<User>::class.java).toList()
-                    println(users.get(0).password)
-                }
+                    override fun onFailure(call: Call?, e: IOException?) {
+                        callback.onFailure("Błąd połączenia z serwerem")
 
-
-                override fun onFailure(call: Call?, e: IOException?) {
-                    println("Failed to execute")
-                }
-            })
-        }
-
-        fun postUser() {
-            val user = User(name = "Jan",
-                    surname = "Kowalski",
-                    login = "pokaz",
-                    password = "Proste123",
-                    phoneNumber = "123123123",
-                    email = "pokaz@test.pl")
-
-            client.newCall(Request.Builder().url("$hostUrl/users")
-                    .post(RequestBody.create(mediaType, gson.toJson(user))).build())
-                    .enqueue(object : Callback {
-                        override fun onResponse(call: Call?, response: Response?) {
-                            val body = response?.body()?.string()
-                            val result = gson.fromJson(body, User::class.java)
-                            println(result.login)
-                        }
-
-                        override fun onFailure(call: Call?, e: IOException?) {
-                            println("Failed to execute")
-                        }
-                    })
-        }
-
-
+                    }
+                })
+    }
+    
 }
