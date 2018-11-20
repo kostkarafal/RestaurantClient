@@ -43,20 +43,28 @@
             android:value="AIzaSyC4ghw3o6wHUKDpc6K-ka5OuhkhDr3UPYE" />
 
         <activity
-            android:name=".ui.basket.OrdersActivity"
-            android:label="@string/order"
-            android:parentActivityName=".ui.basket.OrdersActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.basket.BasketActivity"
             android:label="@string/basket"
             android:parentActivityName=".ui.basket.BasketActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.myaccount.AddressActivity"
+            android:label="@string/address"
+            android:parentActivityName="ui.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.myaccount.NewAddressActivity"
+            android:label="@string/address"
+            android:parentActivityName=".ui.myaccount.AddressActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.kostka.restaurantclient.ui.myaccount.AddressActivity" />
         </activity>
     </application>
 

@@ -6,8 +6,6 @@ import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
-import pl.kostka.restaurantclient.model.enums.OrderStatus
-import pl.kostka.restaurantclient.service.callback.BasketCallback
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.OrderCallback
 import pl.kostka.restaurantclient.service.callback.OrderListCallback
@@ -68,7 +66,7 @@ object OrderService {
                         override fun onResponse(call: Call?, response: Response?) {
                             var body = response?.body()?.string()
                             val order = OrderService.gson.fromJson(body, Order::class.java)
-                            basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f)
+                            basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
                             callback.onResponse(order)
                         }
 

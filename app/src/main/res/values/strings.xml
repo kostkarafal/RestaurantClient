@@ -42,8 +42,8 @@
     <string name="server_error">Cannot connect to server</string>
     <string name="logged_in">Logged in</string>
     <string name="login_failed">Wrong username or password</string>
-    <string name="login">Login:</string>
-    <string name="password">Password:</string>
+    <string name="login_c">Login:</string>
+    <string name="password_c">Password:</string>
     <string name="log_in">Login</string>
     <string name="price">Price:</string>
     <string name="title_activity_product" translatable="false">ProductActivity</string>
@@ -93,11 +93,27 @@
     <string name="log_out">Logout</string>
     <string name="logged_out">Logged out</string>
     <string name="register">Register</string>
-    <string name="username">Username:</string>
-    <string name="name">Name:</string>
-    <string name="surname">Surname:</string>
-    <string name="phone_number">Phone number:</string>
-    <string name="email" translatable="false">E-mail:</string>
-    <string name="confirm_password">Confirm password:</string>
+    <string name="username_c">Username:</string>
+    <string name="name_c">Name:</string>
+    <string name="surname_c">Surname:</string>
+    <string name="phone_number_c">Phone number:</string>
+    <string name="email_c" translatable="false">E-mail:</string>
+    <string name="confirm_password_c">Confirm password:</string>
+    <string name="change_upper">CHANGE</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="adress">Adress</string>
+    <string name="surname">Surname</string>
+    <string name="old_c">Old:</string>
+    <string name="new_c">New:</string>
+    <string name="change">Change</string>
+    <string name="adress_to_far">Address too far away from restaurant</string>
+    <string name="address">Address</string>
+    <string name="add_new_address">Add new addres</string>
+    <string name="city">City</string>
+    <string name="street">Street</string>
+    <string name="building_number">Building number</string>
+    <string name="apartment_number">Apartment_number</string>
 
 </resources>

@@ -6,4 +6,4 @@ class User(var id: Long? = null,
            var name: String,
            var surname: String,
            var phoneNumber: String,
-           val email: String)
+           var email: String)

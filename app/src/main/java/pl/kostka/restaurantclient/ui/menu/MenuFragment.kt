@@ -18,6 +18,8 @@ import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
 import pl.kostka.restaurantclient.service.callback.ProductListCallback
 import pl.kostka.restaurantclient.ui.basket.BasketActivity
+import pl.kostka.restaurantclient.ui.main.MainFragment
+import pl.kostka.restaurantclient.ui.orders.OrdersFragment
 
 
 class MenuFragment: Fragment(){
@@ -45,21 +47,27 @@ class MenuFragment: Fragment(){
         })
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         floatingButton.setOnClickListener {
-            val intent = Intent(view.context, BasketActivity::class.java)
+            val intent = Intent(it.context, BasketActivity::class.java)
 
-            view.context.startActivity(intent)
+            startActivityForResult(intent, 2)
+          //  view.context.(intent)
         }
         return view
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             Snackbar.make(this@MenuFragment.view!!, getString(R.string.AddedItemToBasket), Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
                         println("canceling recently added order")
                         //TODO cancel recently added order
                     }.show()
+        } else if (resultCode == Activity.RESULT_OK && requestCode == 2) {
+            activity?.runOnUiThread {
+                fragmentManager?.beginTransaction()?.replace(R.id.fragment_container, OrdersFragment())?.commit()
+                Snackbar.make(view!!, "Utworzono nowe zamówienie!", Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 

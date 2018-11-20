@@ -11,14 +11,20 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pl.kostka.restaurantclient.ui.login.LoginFragment
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.IsLoggdInListener
 import pl.kostka.restaurantclient.service.JwtService
+import pl.kostka.restaurantclient.service.UserService
+import pl.kostka.restaurantclient.service.callback.UserCallback
 import pl.kostka.restaurantclient.ui.login.RegisterFragment
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
+import pl.kostka.restaurantclient.ui.myaccount.MyAccountFragment
 import pl.kostka.restaurantclient.ui.orders.OrdersFragment
 import pl.kostka.restaurantclient.ui.restaurants.RestaurantsFragment
 
@@ -41,6 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val logoutItem = menu.findItem(R.id.nav_log_out).setVisible(false)
         val myAccountItem = menu.findItem(R.id.nav_my_account).setVisible(false)
         val registerItem = menu.findItem(R.id.nav_register).setVisible(true)
+        var navBarHeader: TextView? = null
 
         JwtService.setLoggedInListener(object : IsLoggdInListener {
             override fun onChange(isLoggedIn: Boolean) {
@@ -52,6 +59,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             logoutItem.setVisible(true)
                             myAccountItem.setVisible(true)
                             Snackbar.make(nav_view, getString(R.string.logged_in), Snackbar.LENGTH_LONG).show()
+                            UserService.getUser(object : UserCallback{
+                                override fun onResponse(user: User) {
+                                    runOnUiThread {
+                                        findViewById<TextView>(R.id.textView_nav_header).text = user.name + " " + user.surname
+                                    }
+                                }
+
+                                override fun onFailure(errMessage: String) {
+                                    runOnUiThread {
+                                        Toast.makeText(this@MainActivity.applicationContext, errMessage, Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            })
                         }
                     }
                     false -> {
@@ -60,6 +80,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             registerItem.setVisible(true)
                             logoutItem.setVisible(false)
                             myAccountItem.setVisible(false)
+                            runOnUiThread {
+                                findViewById<TextView>(R.id.textView_nav_header).text = ""
+                            }
                             Snackbar.make(nav_view, getString(R.string.logged_out), Snackbar.LENGTH_LONG).show()
                         }
                     }
@@ -113,14 +136,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, LoginFragment()).commit()
             }
             R.id.nav_my_account -> {
-                //TODO my account
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MyAccountFragment()).commit()
             }
             R.id.nav_log_out -> {
                 JwtService.logout()
-              //  item.setVisible(false)
-             //    Snackbar.make(nav_view, getString(R.string.logged_out), Snackbar.LENGTH_LONG).show()
-
-
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
             }
             R.id.nav_register -> {

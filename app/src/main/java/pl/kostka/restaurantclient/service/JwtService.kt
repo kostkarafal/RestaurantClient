@@ -2,6 +2,7 @@ package pl.kostka.restaurantclient.service
 
 import ca.mimic.oauth2library.OAuth2Client
 import pl.kostka.restaurantclient.BuildConfig
+import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 import java.util.*
@@ -20,6 +21,7 @@ object JwtService {
         private var accessToken: String = ""
         private var refreshToken: String = ""
         private var expiredAt: Date = Date()
+        private var user: User? = null
         private const val hostUrl = BuildConfig.HOST_URL + "/oauth/token"
         private const val clientId = "clientid"
         private const val clientSecret = "clientsecret"
@@ -42,7 +44,7 @@ object JwtService {
                 } else {
                     val error = it.oAuthError
                     val errorMsg = error.error
-                    isLoggedIn = false
+                    logout()
                     callback.onFailure(errorMsg)
                 }
             }
