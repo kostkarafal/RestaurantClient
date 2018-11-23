@@ -1,14 +1,17 @@
 package pl.kostka.restaurantclient.ui.myaccount
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_address.*
 import kotlinx.android.synthetic.main.content_myaccount.*
 import kotlinx.android.synthetic.main.content_myaccount.view.*
 import pl.kostka.restaurantclient.R
@@ -27,19 +30,7 @@ class MyAccountFragment: Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.content_myaccount, container, false)
 
-
-        UserService.getUser(object : UserCallback{
-            override fun onResponse(user: User) {
-              refreshView(user)
-            }
-
-            override fun onFailure(errMessage: String) {
-                activity?.runOnUiThread {
-                    Toast.makeText(this@MyAccountFragment.context, errMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
+        refreshView()
 
         view.button_myaccount_name.setOnClickListener {
            handleChange(R.string.name_c, user!!.name)
@@ -59,22 +50,49 @@ class MyAccountFragment: Fragment(){
 
         view.button_myaccount_adress.setOnClickListener {
             val intent = Intent(it.context, AddressActivity::class.java)
-
+            intent.putExtra("selectedAddressId", user!!.selectedAddress?.id)
             startActivityForResult(intent, 1)
         }
 
         return view
     }
 
-    private fun refreshView(user: User) {
-        activity?.runOnUiThread {
-            textView_myaccount_name.text = user.name
-            textView_myaccount_surname.text = user.surname
-            textView_myaccount_adress.text = "adres"
-            textView_myaccount_email.text = user.email
-            textView_myaccount_phone.text = user.phoneNumber
-            this@MyAccountFragment.user = user
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+           refreshView()
         }
+    }
+
+    private fun refreshView() {
+        UserService.getUser(object : UserCallback{
+            override fun onResponse(user: User) {
+                activity?.runOnUiThread {
+                    textView_myaccount_name.text = user.name
+                    textView_myaccount_surname.text = user.surname
+                    textView_myaccount_email.text = user.email
+                    textView_myaccount_phone.text = user.phoneNumber
+
+                    if(user.selectedAddress != null){
+                        var address = "${user.selectedAddress!!.street} ${user.selectedAddress!!.buildingNumber}"
+                        if(user.selectedAddress!!.apartmentNumber != null)
+                            address += "/${user.selectedAddress!!.apartmentNumber!!}"
+                        address += ", ${user.selectedAddress!!.city}"
+
+                        textView_myaccount_adress.text = address
+                    }
+
+                    this@MyAccountFragment.user = user
+                }
+            }
+
+            override fun onFailure(errMessage: String) {
+                activity?.runOnUiThread {
+                    Toast.makeText(this@MyAccountFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
     }
 
     private fun handleChange(title: Int, value: String) {
@@ -124,7 +142,7 @@ class MyAccountFragment: Fragment(){
         UserService.editUser(user!!, object : UserCallback{
             override fun onResponse(user: User) {
                 activity?.runOnUiThread {
-                refreshView(user)
+                refreshView()
                 progressBar.visibility = View.INVISIBLE
                 dialog.hide()
                 }

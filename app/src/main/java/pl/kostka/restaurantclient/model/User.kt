@@ -6,4 +6,5 @@ class User(var id: Long? = null,
            var name: String,
            var surname: String,
            var phoneNumber: String,
-           var email: String)
+           var email: String,
+           var selectedAddress: Address? = null)

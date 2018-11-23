@@ -5,6 +5,7 @@ import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
+import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
 import java.util.*
 import kotlin.properties.Delegates
 

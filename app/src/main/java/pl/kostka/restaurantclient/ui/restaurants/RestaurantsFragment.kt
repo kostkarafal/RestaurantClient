@@ -16,7 +16,10 @@ import okhttp3.Callback
 import okhttp3.Response
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.model.Restaurant
 import pl.kostka.restaurantclient.service.ProductService
+import pl.kostka.restaurantclient.service.RestaurantService
+import pl.kostka.restaurantclient.service.callback.RestaurantListCallback
 import java.io.IOException
 import java.lang.Exception
 
@@ -40,17 +43,43 @@ class RestaurantsFragment: Fragment(){
             e.printStackTrace()
         }
 
+        var startLocation = LatLng(52.237049, 21.017532)
+        var mapZoom = 5f
+
         mMapView!!.getMapAsync {
             googleMap = it
 
-            val sydney = LatLng(-34.0, 151.0)
-            googleMap!!.addMarker(MarkerOptions().position(sydney).title("Marker Title"))
-
-            val cameraPosition = CameraPosition.Builder().target(sydney).zoom(12f).build()
-
+            val cameraPosition = CameraPosition.Builder().target(startLocation).zoom(mapZoom).build()
             googleMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-
         }
+
+        //TODO handle case of having more than one restaurant
+        RestaurantService.getRestaurants(object: RestaurantListCallback {
+            override fun onResponse(restaurants: List<Restaurant>) {
+               restaurants.forEach {
+                   val latLng = LatLng(it.latitude, it.longitude)
+                    val restaurantName = it.name
+                   activity?.runOnUiThread {
+                       mMapView!!.getMapAsync {
+                           googleMap = it
+
+                           googleMap!!.addMarker(MarkerOptions().position(latLng).title(restaurantName))
+
+                           val cameraPosition = CameraPosition.Builder().target(latLng).zoom(8f).build()
+
+                           googleMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+
+                       }
+                   }
+               }
+            }
+
+            override fun onFailure(errMessage: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+
 
         return view
     }

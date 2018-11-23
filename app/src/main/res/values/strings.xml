@@ -87,7 +87,7 @@
     <string name="canceled">Canceled</string>
     <string name="confirmed">Confirmed</string>
     <string name="processing">Processing</string>
-    <string name="delivery">In delivery</string>
+    <string name="in_delivery">In delivery</string>
     <string name="completed">Completed</string>
     <string name="my_account">My account</string>
     <string name="log_out">Logout</string>
@@ -115,5 +115,11 @@
     <string name="street">Street</string>
     <string name="building_number">Building number</string>
     <string name="apartment_number">Apartment_number</string>
+    <string name="address_added">Address added</string>
+    <string name="edit_address">Edit address</string>
+    <string name="delivery">Delivery</string>
+    <string name="self_pickup">Self-pickup</string>
+    <string name="delivery_address">Delivery address</string>
+    <string name="yours_restaurant">Yours_restaurant</string>
 
 </resources>

@@ -36,7 +36,7 @@
     <string name="canceled">Anulowano</string>
     <string name="confirmed">Potwierdzono</string>
     <string name="processing">Trwa przygotowanie</string>
-    <string name="delivery">W dostawie</string>
+    <string name="in_delivery">W dostawie</string>
     <string name="completed">Zakończono</string>
     <string name="my_account">Moje konto</string>
     <string name="log_out">Wyloguj</string>
@@ -63,4 +63,10 @@
     <string name="street">Ulica</string>
     <string name="building_number">Numer budynku</string>
     <string name="apartment_number">Numer lokalu</string>
+    <string name="address_added">Dodano adres</string>
+    <string name="edit_address">Edytuj adres</string>
+    <string name="delivery">Dostawa do domu</string>
+    <string name="self_pickup">Odbiór osobisty</string>
+    <string name="delivery_address">Adres dostawy</string>
+    <string name="yours_restaurant">Twoja restauracja</string>
 </resources>

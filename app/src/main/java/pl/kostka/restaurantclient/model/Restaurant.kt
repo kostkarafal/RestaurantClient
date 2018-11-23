@@ -6,4 +6,6 @@ class Restaurant (val id: Long,
                   val city: String,
                   val street: String,
                   val buildingNumber: String,
-                  val openHours: String)
+                  val openHours: String,
+                  val latitude: Double,
+                  val longitude: Double)

@@ -1,7 +1,5 @@
 package pl.kostka.restaurantclient.ui.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -10,7 +8,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +15,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import pl.kostka.restaurantclient.ui.login.LoginFragment
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.User
-import pl.kostka.restaurantclient.service.IsLoggdInListener
+import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.UserCallback
@@ -96,9 +93,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
+        } else if(!(supportFragmentManager.fragments[0] is MainFragment)){
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
+        }
+        else {
             super.onBackPressed()
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

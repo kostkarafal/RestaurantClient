@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Order
@@ -16,7 +15,6 @@ import pl.kostka.restaurantclient.model.enums.OrderStatus
 import pl.kostka.restaurantclient.service.OrderService
 import pl.kostka.restaurantclient.service.callback.OrderListCallback
 import pl.kostka.restaurantclient.ui.basket.OrdersAdapter
-import pl.kostka.restaurantclient.ui.menu.MenuAdapter
 
 
 class OrdersFragment: Fragment(){
@@ -38,7 +36,7 @@ class OrdersFragment: Fragment(){
                                 OrderStatus.PROCESSING to inProgressIcon)
 
         val statuses = hashMapOf(OrderStatus.CANCELED to getString(R.string.canceled),
-                                OrderStatus.DELIVERY to getString(R.string.delivery),
+                                OrderStatus.DELIVERY to getString(R.string.in_delivery),
                                 OrderStatus.CONFIRMED to getString(R.string.confirmed),
                                 OrderStatus.PROCESSING to getString(R.string.processing),
                                 OrderStatus.COMPLETED to getString(R.string.completed))

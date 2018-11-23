@@ -10,9 +10,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_basket.*
+import kotlinx.android.synthetic.main.basket_top_panel.*
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.Address
 import pl.kostka.restaurantclient.model.Order
+import pl.kostka.restaurantclient.service.AddressService
 import pl.kostka.restaurantclient.service.OrderService
+import pl.kostka.restaurantclient.service.callback.AddressCallback
 import pl.kostka.restaurantclient.service.callback.OrderCallback
 
 class BasketActivity : AppCompatActivity() {
@@ -37,6 +41,29 @@ class BasketActivity : AppCompatActivity() {
             recyclerView.adapter = BasketAdapter(OrderService.getBasket(),this@BasketActivity)
         }
 
+        radioButton_basket_delivery.setOnClickListener {
+            radioButton_basket_self_pickup.isChecked = false
+            textView_basket_addres_type.text = getText(R.string.delivery_address)
+
+        }
+
+
+
+        radioButton_basket_self_pickup.setOnClickListener {
+            radioButton_basket_delivery.isChecked = false
+            textView_basket_addres_type.text = getText(R.string.yours_restaurant)
+
+        }
+
+        AddressService.getSelectedAddress(object : AddressCallback{
+            override fun onResponse(address: Address) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure(errMessage: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
 
         button_basket_confirm_order.setOnClickListener {
 

@@ -53,19 +53,21 @@
         <activity
             android:name=".ui.myaccount.AddressActivity"
             android:label="@string/address"
-            android:parentActivityName="ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pl.kostka.restaurantclient.ui.main.MainActivity" />
+                android:value=".ui.main.MainActivity" />
         </activity>
         <activity
             android:name=".ui.myaccount.NewAddressActivity"
-            android:label="@string/address"
+            android:label="@string/add_new_address"
+            android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".ui.myaccount.AddressActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.kostka.restaurantclient.ui.myaccount.AddressActivity" />
         </activity>
+
     </application>
 
 </manifest>
