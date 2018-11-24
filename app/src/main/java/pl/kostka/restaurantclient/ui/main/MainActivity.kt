@@ -1,5 +1,6 @@
 package pl.kostka.restaurantclient.ui.main
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -18,6 +19,7 @@ import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.UserService
+import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 import pl.kostka.restaurantclient.service.callback.UserCallback
 import pl.kostka.restaurantclient.ui.login.RegisterFragment
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
@@ -39,6 +41,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         val menu = nav_view.menu
+
+        val sharedPreferences = getSharedPreferences("PREFERENCES", Activity.MODE_PRIVATE)
+        JwtService.tryLoginFromSharedPreferences(sharedPreferences)
+
 
         val loginItem = menu.findItem(R.id.nav_login).setVisible(true)
         val logoutItem = menu.findItem(R.id.nav_log_out).setVisible(false)

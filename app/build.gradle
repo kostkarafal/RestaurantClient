@@ -17,8 +17,8 @@ android {
 
     buildTypes {
         debug {
-   //         buildConfigField("String", "HOST_URL", '"http://192.168.8.113:8060"')
-           buildConfigField("String", "HOST_URL", '"https://restaurant-server-app.herokuapp.com"')
+            buildConfigField("String", "HOST_URL", '"http://192.168.8.113:8060"')
+   //        buildConfigField("String", "HOST_URL", '"https://restaurant-server-app.herokuapp.com"')
         }
         release {
             minifyEnabled false

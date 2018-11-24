@@ -67,6 +67,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.kostka.restaurantclient.ui.myaccount.AddressActivity" />
         </activity>
+        <activity
+            android:name=".ui.restaurants.RestaurantActivity"
+            android:label="@string/restaurants"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".ui.basket.BasketActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.kostka.restaurantclient.ui.basket.BasketActivity" />
+        </activity>
 
     </application>
 

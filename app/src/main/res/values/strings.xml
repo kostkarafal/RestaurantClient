@@ -121,5 +121,6 @@
     <string name="self_pickup">Self-pickup</string>
     <string name="delivery_address">Delivery address</string>
     <string name="yours_restaurant">Yours_restaurant</string>
+    <string name="select">Select</string>
 
 </resources>

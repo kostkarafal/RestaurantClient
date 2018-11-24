@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.address_row.view.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
 import pl.kostka.restaurantclient.service.AddressService
+import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.AddressCallback
 import pl.kostka.restaurantclient.service.callback.AddressListCallback
 import pl.kostka.restaurantclient.service.callback.VoidCallback
@@ -76,7 +77,7 @@ class AddressAdapter(var addresses: List<Address>, val activity: Activity,privat
             holder.view.radioButton_address.setOnClickListener {
                 lastSelectedPosition = position
                 notifyDataSetChanged()
-                AddressService.selectMainAddress(address.id!!, object : AddressCallback {
+                UserService.selectDeliveryAddress(address.id!!, object : AddressCallback {
                     override fun onResponse(address: Address) {
 
                     }

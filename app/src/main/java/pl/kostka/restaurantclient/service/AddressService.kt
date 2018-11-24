@@ -73,61 +73,6 @@ object AddressService {
         })
     }
 
-        fun selectMainAddress(addressId: Long, callback: AddressCallback) {
-            JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
-                override fun onResponse(accesToken: String) {
-                    val request = Request.Builder()
-                            .url("$hostUrl/addresses/$addressId/select")//TODO handle restaurant id
-                            .put(RequestBody.create(mediaType, gson.toJson(null)))
-                            .addHeader("Authorization", "bearer $accesToken").build()
-
-                    client.newCall(request).enqueue(object : Callback {
-                        override fun onResponse(call: Call?, response: Response?) {
-                            val body = response?.body()?.string()
-                            val result = gson.fromJson(body, Address::class.java)
-                            callback.onResponse(result)
-                        }
-
-                        override fun onFailure(call: Call, e: IOException) {
-                            callback.onFailure("Błąd połączenia z serwerem")
-                        }
-                    })
-                }
-
-                override fun onFailure(errMessage: String) {
-                    callback.onFailure(errMessage)
-                }
-            })
-
-    }
-
-    fun getSelectedAddress(callback: AddressCallback) {
-        JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
-            override fun onResponse(accesToken: String) {
-                val request = Request.Builder()
-                        .url("$hostUrl/addresses/selected")
-                        .get()
-                        .addHeader("Authorization", "bearer $accesToken").build()
-
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onResponse(call: Call?, response: Response?) {
-                        val body = response?.body()?.string()
-                        val result = gson.fromJson(body, Address::class.java)
-                        callback.onResponse(result)
-                    }
-
-                    override fun onFailure(call: Call, e: IOException) {
-                        callback.onFailure("Błąd połączenia z serwerem")
-                    }
-                })
-            }
-
-            override fun onFailure(errMessage: String) {
-                callback.onFailure(errMessage)
-            }
-        })
-    }
-
 
     fun getAddresses(callback: AddressListCallback) {
             JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {

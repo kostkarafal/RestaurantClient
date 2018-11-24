@@ -1,5 +1,6 @@
 package pl.kostka.restaurantclient.service
 
+import android.content.SharedPreferences
 import ca.mimic.oauth2library.OAuth2Client
 import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.User
@@ -23,13 +24,24 @@ object JwtService {
         private var refreshToken: String = ""
         private var expiredAt: Date = Date()
         private var user: User? = null
+        private var sharedPreferences: SharedPreferences? = null
+        private const val REFRESH_TOKEN = "REFRESH_TOKEN"
         private const val hostUrl = BuildConfig.HOST_URL + "/oauth/token"
         private const val clientId = "clientid"
         private const val clientSecret = "clientsecret"
         private const val scope = "read"
-
         fun setLoggedInListener(listener: IsLoggdInListener){
             this.listener = listener
+        }
+
+        fun tryLoginFromSharedPreferences(sharedPreferences: SharedPreferences){
+            this.sharedPreferences = sharedPreferences
+
+            val result = sharedPreferences.getString(REFRESH_TOKEN, "")
+            if(result != null && result.isNotEmpty()){
+                refreshToken = result
+                refreshToken()
+            }
         }
 
         fun login(username: String, password: String, callback: LoginResponseCallback){
@@ -41,6 +53,7 @@ object JwtService {
                     refreshToken = it.refreshToken
                     expiredAt = Date(it.expiresAt)
                     isLoggedIn = true
+                    sharedPreferences!!.edit().putString(REFRESH_TOKEN, refreshToken).apply()
                     callback.onResponse()
                 } else {
                     val error = it.oAuthError
@@ -53,6 +66,7 @@ object JwtService {
 
         fun logout(){
             refreshToken = ""
+            sharedPreferences!!.edit().putString(REFRESH_TOKEN, refreshToken).apply()
             accessToken = ""
             isLoggedIn = false
             expiredAt = Date()
@@ -82,7 +96,7 @@ object JwtService {
                 }
         }
 
-        private fun refreshToken(callback: LoginResponseCallback){
+        private fun refreshToken(callback: LoginResponseCallback? = null){
                 OAuth2Client.Builder(null, null, clientId, clientSecret, hostUrl).build()
                         .refreshAccessToken(refreshToken) {
                             if (it.isSuccessful) {
@@ -90,12 +104,13 @@ object JwtService {
                                 refreshToken = it.refreshToken
                                 expiredAt = Date(it.expiresAt)
                                 isLoggedIn = true
-                                callback.onResponse()
+                                sharedPreferences!!.edit().putString(REFRESH_TOKEN, refreshToken).apply()
+                                callback?.onResponse()
                             } else {
                                 val error = it.oAuthError
                                 val errorMsg = error.error
                                 isLoggedIn = false
-                                callback.onFailure(errorMsg)
+                                callback?.onFailure(errorMsg)
                             }
                         }
         }

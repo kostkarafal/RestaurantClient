@@ -69,4 +69,5 @@
     <string name="self_pickup">Odbiór osobisty</string>
     <string name="delivery_address">Adres dostawy</string>
     <string name="yours_restaurant">Twoja restauracja</string>
+    <string name="select">Wybierz</string>
 </resources>

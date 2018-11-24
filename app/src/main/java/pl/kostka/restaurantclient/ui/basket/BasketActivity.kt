@@ -1,6 +1,7 @@
 package pl.kostka.restaurantclient.ui.basket
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -14,12 +15,19 @@ import kotlinx.android.synthetic.main.basket_top_panel.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
 import pl.kostka.restaurantclient.model.Order
-import pl.kostka.restaurantclient.service.AddressService
+import pl.kostka.restaurantclient.model.Restaurant
 import pl.kostka.restaurantclient.service.OrderService
+import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.AddressCallback
 import pl.kostka.restaurantclient.service.callback.OrderCallback
+import pl.kostka.restaurantclient.service.callback.RestaurantCallback
+import pl.kostka.restaurantclient.ui.myaccount.AddressActivity
+import pl.kostka.restaurantclient.ui.restaurants.RestaurantActivity
 
 class BasketActivity : AppCompatActivity() {
+
+    var deliveryAddress: Address? = null
+    var selectedRestaurant: Restaurant? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +38,8 @@ class BasketActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar_basket)
         progressBar.visibility = View.INVISIBLE
         val basket = OrderService.getBasket()
+        radioButton_basket_delivery.isChecked = true
+
 
         if(basket.products.size == 0) {
             container_basket_summary.visibility = View.INVISIBLE
@@ -41,29 +51,42 @@ class BasketActivity : AppCompatActivity() {
             recyclerView.adapter = BasketAdapter(OrderService.getBasket(),this@BasketActivity)
         }
 
-        radioButton_basket_delivery.setOnClickListener {
-            radioButton_basket_self_pickup.isChecked = false
-            textView_basket_addres_type.text = getText(R.string.delivery_address)
+        getDeliveryAddress()
 
+        radioButton_basket_delivery.setOnClickListener {
+            if(deliveryAddress != null) {
+                radioButton_basket_self_pickup.isChecked = false
+                textView_basket_title.text = deliveryAddress!!.title
+                textView_basket_addres_type.text = getString(R.string.delivery_address)
+            } else {
+                getDeliveryAddress()
+            }
         }
 
 
 
         radioButton_basket_self_pickup.setOnClickListener {
-            radioButton_basket_delivery.isChecked = false
-            textView_basket_addres_type.text = getText(R.string.yours_restaurant)
-
+            if(selectedRestaurant != null) {
+                radioButton_basket_delivery.isChecked = false
+                textView_basket_title.text = selectedRestaurant!!.name
+                textView_basket_addres_type.text = getString(R.string.yours_restaurant)
+            } else {
+                getRestaurantAddress()
+            }
         }
 
-        AddressService.getSelectedAddress(object : AddressCallback{
-            override fun onResponse(address: Address) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        button_basket_change.setOnClickListener {
+            if( radioButton_basket_delivery.isChecked) {
+                val intent = Intent(it.context, AddressActivity::class.java)
+                intent.putExtra("selectedAddressId", deliveryAddress?.id)
+                startActivityForResult(intent, 1)
+            } else if (radioButton_basket_self_pickup.isChecked) {
+                val intent = Intent(it.context, RestaurantActivity::class.java)
+                intent.putExtra("selectedAddressId", deliveryAddress?.id)
+                startActivityForResult(intent, 2)
             }
+        }
 
-            override fun onFailure(errMessage: String) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
 
         button_basket_confirm_order.setOnClickListener {
 
@@ -89,4 +112,50 @@ class BasketActivity : AppCompatActivity() {
             })
         }
     }
+
+    private fun getDeliveryAddress() {
+        UserService.getSelectedAddress(object : AddressCallback{
+            override fun onResponse(address: Address) {
+                deliveryAddress = address
+                runOnUiThread {
+                    radioButton_basket_self_pickup.isChecked = false
+                    textView_basket_title.text = address.title
+                    textView_basket_addres_type.text = getString(R.string.delivery_address)
+                }
+            }
+
+            override fun onFailure(errMessage: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+    private fun getRestaurantAddress() {
+        UserService.getSelectedRestaurant(object : RestaurantCallback{
+            override fun onResponse(restaurant: Restaurant) {
+                selectedRestaurant = restaurant
+                runOnUiThread {
+                    radioButton_basket_delivery.isChecked = false
+                    textView_basket_title.text = restaurant.name
+                    textView_basket_addres_type.text = getString(R.string.yours_restaurant)
+                }
+            }
+
+            override fun onFailure(errMessage: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+            getDeliveryAddress()
+        } else if (resultCode == Activity.RESULT_OK && requestCode == 2) {
+            getRestaurantAddress()
+        }
+    }
+
 }
