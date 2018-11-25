@@ -1,23 +1,17 @@
 package pl.kostka.restaurantclient.ui.product
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.content_product.*
 import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.R
-import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.OrderService
-import pl.kostka.restaurantclient.service.callback.OrderCallback
-import pl.kostka.restaurantclient.service.callback.OrderListCallback
 
 class ProductActivity : AppCompatActivity() {
 

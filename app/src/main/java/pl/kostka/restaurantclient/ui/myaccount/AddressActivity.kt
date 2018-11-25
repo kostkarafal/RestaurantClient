@@ -14,14 +14,7 @@ import kotlinx.android.synthetic.main.activity_address.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
 import pl.kostka.restaurantclient.service.AddressService
-import pl.kostka.restaurantclient.service.JwtService
-import pl.kostka.restaurantclient.service.callback.AddressListCallback
-import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
-import pl.kostka.restaurantclient.service.listener.OnChangeListener
-import pl.kostka.restaurantclient.ui.orders.OrdersFragment
-
-import java.util.*
-import kotlin.properties.Delegates
+import pl.kostka.restaurantclient.service.callback.AddressArrayCallback
 
 class AddressActivity : AppCompatActivity() {
 
@@ -54,11 +47,11 @@ class AddressActivity : AppCompatActivity() {
     }
 
     private fun refreshAddressList() {
-        AddressService.getAddresses(object : AddressListCallback {
-            override fun onResponse(address: List<Address> ) {
+        AddressService.getAddresses(object : AddressArrayCallback {
+            override fun onResponse(response: Array<Address> ) {
                 runOnUiThread {
-                    val result = address.find { address -> address.id!!.equals(selectedAddressId)}
-                    recyclerView!!.adapter = AddressAdapter(address, this@AddressActivity, address.indexOf(result), true )
+                    val result = response.find { address -> address.id!!.equals(selectedAddressId)}
+                    recyclerView!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, response.indexOf(result), true )
                 }
             }
 
@@ -68,10 +61,10 @@ class AddressActivity : AppCompatActivity() {
                 }
             }
         })
-        AddressService.getUnsupportedAddresses(object : AddressListCallback {
-            override fun onResponse(address: List<Address> ) {
+        AddressService.getUnsupportedAddresses(object : AddressArrayCallback {
+            override fun onResponse(response: Array<Address> ) {
                 runOnUiThread {
-                    recyclerView2!!.adapter = AddressAdapter(address, this@AddressActivity, -1, false)
+                    recyclerView2!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, -1, false)
                 }
             }
 

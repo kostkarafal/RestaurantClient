@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.restaurant_details.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Restaurant
 import pl.kostka.restaurantclient.service.RestaurantService
-import pl.kostka.restaurantclient.service.callback.RestaurantListCallback
+import pl.kostka.restaurantclient.service.callback.RestaurantArrayCallback
 import java.lang.Exception
 import android.widget.Toast
 import pl.kostka.restaurantclient.service.UserService
@@ -64,9 +64,9 @@ class RestaurantsFragment: Fragment(){
 
 
         //TODO handle case of having more than one restaurant
-        RestaurantService.getRestaurants(object: RestaurantListCallback {
-            override fun onResponse(response: List<Restaurant>) {
-                restaurants = response
+        RestaurantService.getRestaurants(object: RestaurantArrayCallback {
+            override fun onResponse(response: Array<Restaurant>) {
+                restaurants = response.toList()
                restaurants.forEach {
                    val latLng = LatLng(it.latitude, it.longitude)
                    val restaurantId = it.id

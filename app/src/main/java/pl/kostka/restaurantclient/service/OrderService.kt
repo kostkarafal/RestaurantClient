@@ -1,29 +1,14 @@
 package pl.kostka.restaurantclient.service
 
-import com.google.gson.GsonBuilder
-import okhttp3.*
-import pl.kostka.restaurantclient.BuildConfig
 import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
-import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.OrderCallback
-import pl.kostka.restaurantclient.service.callback.OrderListCallback
-import java.io.IOException
+import pl.kostka.restaurantclient.service.callback.OrderArrayCallback
 
 object OrderService {
-        val hostUrl = BuildConfig.HOST_URL
-        val gson = GsonBuilder().create()
-        val mediaType = MediaType.parse("application/json; charset=utf-8")
-        val client = OkHttpClient()
+
         private var basket: Basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
-
-        fun getMenu(): Call {
-            val request = Request.Builder()
-                    .url("$hostUrl/products").get().build()
-
-            return client.newCall(request)
-        }
 
         fun getBasket(): Basket {
             return basket
@@ -55,59 +40,12 @@ object OrderService {
         }
 
         fun makeOrder(callback: OrderCallback) {
-            JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
-                override fun onResponse(accesToken: String) {
-                    val request = Request.Builder()
-                            .url("${OrderService.hostUrl}/orders/make-order")//TODO handle restaurant id
-                            .post(RequestBody.create(mediaType, gson.toJson(basket)))
-                            .addHeader("Authorization", "bearer $accesToken").build()
-
-                    OrderService.client.newCall(request).enqueue(object : Callback {
-                        override fun onResponse(call: Call?, response: Response?) {
-                            var body = response?.body()?.string()
-                            val order = OrderService.gson.fromJson(body, Order::class.java)
-                            basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
-                            callback.onResponse(order)
-                        }
-
-                        override fun onFailure(call: Call, e: IOException) {
-                            callback.onFailure("Błąd połączenia z serwerem")
-                        }
-                    })
-                }
-
-                override fun onFailure(errMessage: String) {
-                    callback.onFailure(errMessage)
-                }
-            })
-
+            Http.authPost("orders/make-order", basket, Order::class.java, callback)
+            basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
         }
 
-        fun getOrderHistory(callback: OrderListCallback) {
-            JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
-                override fun onResponse(accesToken: String) {
-                    val request = Request.Builder()
-                            .url("${OrderService.hostUrl}/orders")
-                            .get()
-                            .addHeader("Authorization", "bearer $accesToken").build()
-
-                    OrderService.client.newCall(request).enqueue(object : Callback {
-                        override fun onResponse(call: Call?, response: Response?) {
-                            var body = response?.body()?.string()
-                            val orderList = OrderService.gson.fromJson(body, Array<Order>::class.java).toList()
-                            callback.onResponse(orderList)
-                        }
-
-                        override fun onFailure(call: Call, e: IOException) {
-                            callback.onFailure("Błąd połączenia z serwerem")
-                        }
-                    })
-                }
-
-                override fun onFailure(errMessage: String) {
-                    callback.onFailure(errMessage)
-                }
-            })
+        fun getOrderHistory(callback: OrderArrayCallback) {
+            Http.authGet("orders", Array<Order>::class.java, callback)
         }
 
         private fun refreshTotalPrice() {

@@ -16,9 +16,8 @@ import android.widget.Toast
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.service.ProductService
-import pl.kostka.restaurantclient.service.callback.ProductListCallback
+import pl.kostka.restaurantclient.service.callback.ProductArrayCallback
 import pl.kostka.restaurantclient.ui.basket.BasketActivity
-import pl.kostka.restaurantclient.ui.main.MainFragment
 import pl.kostka.restaurantclient.ui.orders.OrdersFragment
 
 
@@ -31,10 +30,10 @@ class MenuFragment: Fragment(){
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
 
-        ProductService.getMenu(object : ProductListCallback{
-            override fun onResponse(menu: List<Product>) {
+        ProductService.getMenu(object : ProductArrayCallback{
+            override fun onResponse(menu: Array<Product>) {
                 activity?.runOnUiThread {
-                    recyclerView.adapter = MenuAdapter(menu, this@MenuFragment)
+                    recyclerView.adapter = MenuAdapter(menu.toList(), this@MenuFragment)
                     progressBar.visibility = View.INVISIBLE
                 }
             }

@@ -13,7 +13,7 @@ import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.enums.OrderStatus
 import pl.kostka.restaurantclient.service.OrderService
-import pl.kostka.restaurantclient.service.callback.OrderListCallback
+import pl.kostka.restaurantclient.service.callback.OrderArrayCallback
 import pl.kostka.restaurantclient.ui.basket.OrdersAdapter
 
 
@@ -44,11 +44,11 @@ class OrdersFragment: Fragment(){
         recyclerView1.layoutManager = LinearLayoutManager(view.context)
         recyclerView2.layoutManager = LinearLayoutManager(view.context)
 
-        OrderService.getOrderHistory(object : OrderListCallback {
-            override fun onResponse(orders: List<Order>) {
+        OrderService.getOrderHistory(object : OrderArrayCallback {
+            override fun onResponse(response: Array<Order>) {
                 activity?.runOnUiThread {
-                    recyclerView1.adapter = OrdersAdapter(orders, icons, statuses)
-                    recyclerView2.adapter = OrdersAdapter(orders, icons, statuses)
+                    recyclerView1.adapter = OrdersAdapter(response.toList(), icons, statuses)
+                    recyclerView2.adapter = OrdersAdapter(response.toList(), icons, statuses)
                 }
             }
 

@@ -13,8 +13,8 @@ import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
 import pl.kostka.restaurantclient.service.AddressService
 import pl.kostka.restaurantclient.service.UserService
+import pl.kostka.restaurantclient.service.callback.AddressArrayCallback
 import pl.kostka.restaurantclient.service.callback.AddressCallback
-import pl.kostka.restaurantclient.service.callback.AddressListCallback
 import pl.kostka.restaurantclient.service.callback.VoidCallback
 
 class AddressAdapter(var addresses: List<Address>, val activity: Activity,private var lastSelectedPosition: Int,val isAddressSupported: Boolean): RecyclerView.Adapter<AddresViewHolder>() {
@@ -44,10 +44,10 @@ class AddressAdapter(var addresses: List<Address>, val activity: Activity,privat
         holder.view.imageButton_address_delete.setOnClickListener {
             AddressService.deleteAddress(address.id!!, object : VoidCallback {
                 override fun onResponse() {
-                   AddressService.getAddresses(object : AddressListCallback {
-                       override fun onResponse(address: List<Address>) {
+                   AddressService.getAddresses(object : AddressArrayCallback {
+                       override fun onResponse(response: Array<Address>) {
                            this@AddressAdapter.activity.runOnUiThread {
-                               addresses = address
+                               addresses = response.toList()
                                if(lastSelectedPosition == position)
                                    lastSelectedPosition = -1
                                notifyDataSetChanged()
