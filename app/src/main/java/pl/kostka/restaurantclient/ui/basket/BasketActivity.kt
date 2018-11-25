@@ -91,35 +91,53 @@ class BasketActivity : AppCompatActivity() {
         button_basket_confirm_order.setOnClickListener {
 
             progressBar.visibility = View.VISIBLE
-            OrderService.makeOrder(object: OrderCallback {
-                override fun onResponse(order: Order) {
-                    runOnUiThread {
-                        progressBar.visibility = View.INVISIBLE
 
-                        this@BasketActivity.setResult(Activity.RESULT_OK)
-                        this@BasketActivity.finish()
+            if (radioButton_basket_self_pickup.isChecked) {
+                OrderService.makeSelfPickupOrder(selectedRestaurant!!.id, object : OrderCallback {
+                    override fun onResponse(response: Order) {
+                        runOnUiThread {
+                            progressBar.visibility = View.INVISIBLE
+
+                            this@BasketActivity.setResult(Activity.RESULT_OK)
+                            this@BasketActivity.finish()
+                        }
+
                     }
 
-                }
+                    override fun onFailure(errMessage: String) {
+                        runOnUiThread {
+                            progressBar.visibility = View.INVISIBLE
+                            Toast.makeText(this@BasketActivity, errMessage, Toast.LENGTH_LONG).show()
+                        }
 
-                override fun onFailure(errMessage: String) {
-                    runOnUiThread {
-                        progressBar.visibility = View.INVISIBLE
-                        Toast.makeText(this@BasketActivity, errMessage, Toast.LENGTH_LONG).show()
+                    }
+                })
+            } else if (radioButton_basket_delivery.isChecked) {
+                OrderService.makeDeliveryOrder(deliveryAddress!!.id!!, object: OrderCallback {
+                    override fun onResponse(response: Order) {
+                        runOnUiThread {
+                            progressBar.visibility = View.INVISIBLE
+
+                            this@BasketActivity.setResult(Activity.RESULT_OK)
+                            this@BasketActivity.finish()
+                        }
                     }
 
-                }
-            })
+                    override fun onFailure(errMessage: String) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+            }
         }
     }
 
     private fun getDeliveryAddress() {
         UserService.getSelectedAddress(object : AddressCallback{
-            override fun onResponse(address: Address) {
-                deliveryAddress = address
+            override fun onResponse(response: Address) {
+                deliveryAddress = response
                 runOnUiThread {
                     radioButton_basket_self_pickup.isChecked = false
-                    textView_basket_title.text = address.title
+                    textView_basket_title.text = response.title
                     textView_basket_addres_type.text = getString(R.string.delivery_address)
                 }
             }
@@ -133,11 +151,11 @@ class BasketActivity : AppCompatActivity() {
 
     private fun getRestaurantAddress() {
         UserService.getSelectedRestaurant(object : RestaurantCallback{
-            override fun onResponse(restaurant: Restaurant) {
-                selectedRestaurant = restaurant
+            override fun onResponse(response: Restaurant) {
+                selectedRestaurant = response
                 runOnUiThread {
                     radioButton_basket_delivery.isChecked = false
-                    textView_basket_title.text = restaurant.name
+                    textView_basket_title.text = response.name
                     textView_basket_addres_type.text = getString(R.string.yours_restaurant)
                 }
             }

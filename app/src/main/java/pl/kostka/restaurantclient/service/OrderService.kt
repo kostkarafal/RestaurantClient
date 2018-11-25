@@ -3,6 +3,7 @@ package pl.kostka.restaurantclient.service
 import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.model.enums.OrderType
 import pl.kostka.restaurantclient.service.callback.OrderCallback
 import pl.kostka.restaurantclient.service.callback.OrderArrayCallback
 
@@ -39,13 +40,29 @@ object OrderService {
             this.refreshTotalPrice()
         }
 
-        fun makeOrder(callback: OrderCallback) {
+
+        fun makeDeliveryOrder(deliveryAddressId: Long, callback: OrderCallback) {
+            basket.deliveryAddressId = deliveryAddressId
+            basket.orderType = OrderType.DELIVERY
+
             Http.authPost("orders/make-order", basket, Order::class.java, callback)
-            basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
+            crearBasket()
+        }
+
+        fun makeSelfPickupOrder(restaurantId: Long, callback: OrderCallback) {
+            basket.restaurantId = restaurantId
+            basket.orderType = OrderType.SELF_PICKUP
+
+            Http.authPost("orders/make-order", basket, Order::class.java, callback)
+            crearBasket()
+        }
+
+        fun getActualOrders(callback: OrderArrayCallback) {
+            Http.authGet("orders", Array<Order>::class.java, callback)
         }
 
         fun getOrderHistory(callback: OrderArrayCallback) {
-            Http.authGet("orders", Array<Order>::class.java, callback)
+            Http.authGet("orders/history", Array<Order>::class.java, callback)
         }
 
         private fun refreshTotalPrice() {
@@ -54,4 +71,9 @@ object OrderService {
                 basket.totalPrize += basket.products[i].price * basket.productsAmount[i]
             }
         }
+
+    private fun crearBasket(){
+        basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, orderType = null, restaurantId = null, deliveryAddressId = null)
+
+    }
 }

@@ -8,4 +8,5 @@ data class Order (var id: Long? = null,
                   var totalPrice: Float,
                   var orderType: OrderType,
                   var products: List<Product>,
-                  var restaurant: Restaurant? = null)
+                  var restaurant: Restaurant,
+                  var deliveryAddressId: Long? = null)

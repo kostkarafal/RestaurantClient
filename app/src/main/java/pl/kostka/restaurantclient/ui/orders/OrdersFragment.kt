@@ -44,10 +44,23 @@ class OrdersFragment: Fragment(){
         recyclerView1.layoutManager = LinearLayoutManager(view.context)
         recyclerView2.layoutManager = LinearLayoutManager(view.context)
 
-        OrderService.getOrderHistory(object : OrderArrayCallback {
+        OrderService.getActualOrders(object : OrderArrayCallback {
             override fun onResponse(response: Array<Order>) {
                 activity?.runOnUiThread {
                     recyclerView1.adapter = OrdersAdapter(response.toList(), icons, statuses)
+                }
+            }
+
+            override fun onFailure(errMessage: String) {
+                activity?.runOnUiThread {
+                    Toast.makeText(this@OrdersFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
+        OrderService.getOrderHistory(object : OrderArrayCallback {
+            override fun onResponse(response: Array<Order>) {
+                activity?.runOnUiThread {
                     recyclerView2.adapter = OrdersAdapter(response.toList(), icons, statuses)
                 }
             }
