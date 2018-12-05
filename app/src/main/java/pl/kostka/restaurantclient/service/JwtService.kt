@@ -3,9 +3,11 @@ package pl.kostka.restaurantclient.service
 import android.content.SharedPreferences
 import ca.mimic.oauth2library.OAuth2Client
 import pl.kostka.restaurantclient.BuildConfig
+import pl.kostka.restaurantclient.model.TokenResponse
 import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
+import pl.kostka.restaurantclient.service.callback.TokenResponeCallback
 import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
 import java.util.*
 import kotlin.properties.Delegates
@@ -62,6 +64,18 @@ object JwtService {
                     callback.onFailure(errorMsg)
                 }
             }
+        }
+
+        fun changeToLoggedIn(token: TokenResponse){
+            accessToken = token.access_token
+            refreshToken = token.refresh_token
+            expiredAt = Date(token.expires_in * 1000 + System.currentTimeMillis())
+            isLoggedIn = true
+            sharedPreferences!!.edit().putString(REFRESH_TOKEN, refreshToken).apply()
+        }
+
+        fun loginFacebook(token: String, callback: TokenResponeCallback){
+            Http.get("/login/facebook?token=$token", TokenResponse::class.java, callback)
         }
 
         fun logout(){

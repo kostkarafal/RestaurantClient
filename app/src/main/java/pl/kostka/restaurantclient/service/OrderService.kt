@@ -45,7 +45,7 @@ object OrderService {
             basket.deliveryAddressId = deliveryAddressId
             basket.orderType = OrderType.DELIVERY
 
-            Http.authPost("orders/make-order", basket, Order::class.java, callback)
+            Http.authPost("/orders/make-order", basket, Order::class.java, callback)
             crearBasket()
         }
 
@@ -53,16 +53,16 @@ object OrderService {
             basket.restaurantId = restaurantId
             basket.orderType = OrderType.SELF_PICKUP
 
-            Http.authPost("orders/make-order", basket, Order::class.java, callback)
+            Http.authPost("/orders/make-order", basket, Order::class.java, callback)
             crearBasket()
         }
 
         fun getActualOrders(callback: OrderArrayCallback) {
-            Http.authGet("orders", Array<Order>::class.java, callback)
+            Http.authGet("/orders", Array<Order>::class.java, callback)
         }
 
         fun getOrderHistory(callback: OrderArrayCallback) {
-            Http.authGet("orders/history", Array<Order>::class.java, callback)
+            Http.authGet("/orders/history", Array<Order>::class.java, callback)
         }
 
         private fun refreshTotalPrice() {

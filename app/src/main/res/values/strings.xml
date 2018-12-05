@@ -30,6 +30,9 @@
         <item>@string/coffee_tea</item>
     </string-array>
 
+    <string name="facebook_app_id" translatable="false">283627319164335</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb283627319164335</string>
+
     <string name="app_name">RestaurantClient</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

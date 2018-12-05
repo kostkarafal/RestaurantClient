@@ -18,26 +18,26 @@ object Http {
 
     fun get(url: String, responseClass: Class<out Any>, callbackAny: Any) {
         val request = Request.Builder()
-                .url("$hostUrl/$url").get().build()
+                .url("$hostUrl$url").get().build()
 
         runRequest(request, responseClass, callbackAny)
     }
 
     fun post(url: String, body: Any?, responseClass: Class<out Any>, callbackAny: Any) {
         val request = Request.Builder()
-                .url("$hostUrl/$url").post(RequestBody.create(mediaType, checkRequestBody(body))).build()
+                .url("$hostUrl$url").post(RequestBody.create(mediaType, checkRequestBody(body))).build()
         runRequest(request, responseClass, callbackAny)
     }
 
     fun put(url: String, body: Any?, responseClass: Class<out Any>, callbackAny: Any) {
         val request = Request.Builder()
-                .url("$hostUrl/$url").put(RequestBody.create(mediaType, checkRequestBody(body))).build()
+                .url("$hostUrl$url").put(RequestBody.create(mediaType, checkRequestBody(body))).build()
         runRequest(request, responseClass, callbackAny)
     }
 
     fun delete(url: String, callback: VoidCallback) {
         val request = Request.Builder()
-                .url("$hostUrl/$url").delete().build()
+                .url("$hostUrl$url").delete().build()
         runVoidRequest(request, callback)
     }
 
@@ -46,7 +46,7 @@ object Http {
         JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
             override fun onResponse(accesToken: String) {
                 val request = Request.Builder()
-                        .url("$hostUrl/$url")
+                        .url("$hostUrl$url")
                         .get()
                         .addHeader("Authorization", "bearer $accesToken").build()
                 runRequest(request, responseClass, callbackAny)
@@ -65,7 +65,7 @@ object Http {
         JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
             override fun onResponse(accesToken: String) {
                 val request = Request.Builder()
-                        .url("$hostUrl/$url")
+                        .url("$hostUrl$url")
                         .post(RequestBody.create(mediaType, checkRequestBody(body)))
                         .addHeader("Authorization", "bearer $accesToken").build()
                 runRequest(request, responseClass, callbackAny)
@@ -82,7 +82,7 @@ object Http {
         JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
             override fun onResponse(accesToken: String) {
                 val request = Request.Builder()
-                        .url("$hostUrl/$url")
+                        .url("$hostUrl$url")
                         .put(RequestBody.create(mediaType, checkRequestBody(body)))
                         .addHeader("Authorization", "bearer $accesToken").build()
                runRequest(request, responseClass, callbackAny)
@@ -98,7 +98,7 @@ object Http {
         JwtService.getAuthorizationHeader(object : GetAuthHeaderCallback {
             override fun onResponse(accesToken: String) {
                 val request = Request.Builder()
-                        .url("$hostUrl/$url")
+                        .url("$hostUrl$url")
                         .delete()
                         .addHeader("Authorization", "bearer $accesToken").build()
                 runVoidRequest(request, callback)
