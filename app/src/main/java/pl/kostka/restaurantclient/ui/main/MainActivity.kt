@@ -15,11 +15,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pl.kostka.restaurantclient.ui.login.LoginFragment
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.UserService
-import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 import pl.kostka.restaurantclient.service.callback.UserCallback
 import pl.kostka.restaurantclient.ui.login.RegisterFragment
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val logoutItem = menu.findItem(R.id.nav_log_out).setVisible(false)
         val myAccountItem = menu.findItem(R.id.nav_my_account).setVisible(false)
         val registerItem = menu.findItem(R.id.nav_register).setVisible(true)
-        var navBarHeader: TextView? = null
 
         JwtService.setLoggedInListener(object : IsLoggdInListener {
             override fun onChange(isLoggedIn: Boolean) {
@@ -63,15 +62,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             myAccountItem.setVisible(true)
                             Snackbar.make(nav_view, getString(R.string.logged_in), Snackbar.LENGTH_LONG).show()
                             UserService.getUser(object : UserCallback{
-                                override fun onResponse(user: User) {
+                                override fun onResponse(response: User) {
                                     runOnUiThread {
-                                        findViewById<TextView>(R.id.textView_nav_header).text = user.name + " " + user.surname
+                                        val userFullName = "${response.name} ${response.surname}"
+                                        findViewById<TextView>(R.id.textView_nav_header).text = userFullName
                                     }
                                 }
 
-                                override fun onFailure(errMessage: String) {
+                                override fun onFailure(error: ErrorResponse) {
                                     runOnUiThread {
-                                        Toast.makeText(this@MainActivity.applicationContext, errMessage, Toast.LENGTH_LONG).show()
+                                        Toast.makeText(this@MainActivity.applicationContext, error.getMsg(), Toast.LENGTH_LONG).show()
                                     }
                                 }
                             })

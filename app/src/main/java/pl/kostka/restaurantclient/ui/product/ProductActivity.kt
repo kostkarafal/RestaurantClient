@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import com.squareup.picasso.Picasso
 
@@ -22,17 +23,28 @@ class ProductActivity : AppCompatActivity() {
         val buttonAddToOrder = findViewById<Button>(R.id.button_addToOrder)
         val buttonBack = findViewById<ImageButton>(R.id.button_productBack)
         val product = intent.getSerializableExtra("Product") as Product
+        val amountText = findViewById<EditText>(R.id.editText_product_amount)
 
         textView_product_name.text = product.name
         textView_product_description.text = product.description
         textView_product_price.text = String.format("%.2f", product.price)
         val imageView = imageView_product_image
         Picasso.with(applicationContext).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
-        val fragment = this@ProductActivity //TODO handle adding more than one product
-        val productList: List<Long> = longArrayOf(product.id).toList()
+
+        button_product_minus.setOnClickListener {
+            var result = amountText.text.toString().toInt()
+            if (result > 1) result--
+            amountText.setText(result.toString())
+        }
+
+        button_product_plus.setOnClickListener {
+            var result = amountText.text.toString().toInt()
+            if (result < 100) result++
+            amountText.setText(result.toString())
+        }
 
         buttonAddToOrder.setOnClickListener {
-            OrderService.addProductToBasket(product)
+            OrderService.addProductToBasket(product, amountText.text.toString().toInt())
             this@ProductActivity.setResult(Activity.RESULT_OK)
             this@ProductActivity.finish()
         }

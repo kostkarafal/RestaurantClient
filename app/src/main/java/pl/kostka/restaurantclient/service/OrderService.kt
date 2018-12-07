@@ -3,41 +3,61 @@ package pl.kostka.restaurantclient.service
 import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.model.ProductAmount
 import pl.kostka.restaurantclient.model.enums.OrderType
 import pl.kostka.restaurantclient.service.callback.OrderCallback
 import pl.kostka.restaurantclient.service.callback.OrderArrayCallback
 
 object OrderService {
 
-        private var basket: Basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, restaurantId = 10)
+        private var basket: Basket = Basket(products = mutableListOf(), totalPrize = 0f, restaurantId = 10)
+        private var recentlyAdded: ProductAmount? = null
 
         fun getBasket(): Basket {
             return basket
         }
 
-        fun addProductToBasket(product: Product) {
-            val index = basket.products.indexOf(product)
-            if (index >= 0) {
-                basket.productsAmount.add(index, basket.productsAmount.get(index).plus(1))
-                basket.productsAmount.removeAt(index + 1)
+        fun addProductToBasket(product: Product, amount: Int) {
+            val index = basket.products.indexOfFirst { it -> it.product == product }
+            if(index >= 0){
+                basket.products[index].amount += amount
             } else {
-                basket.products.add(product)
-                basket.productsAmount.add(1)
+                basket.products.add(ProductAmount(product, amount))
             }
+            recentlyAdded = ProductAmount(product,amount)
+
             this.refreshTotalPrice()
         }
 
         fun changeProductAmount(product: Product, amount: Int) {
-            val index = basket.products.indexOf(product)
 
-            if (amount == 0) {
-                basket.products.removeAt(index)
-                basket.productsAmount.removeAt(index)
+            val index = basket.products.indexOfFirst { it -> it.product == product }
+
+            if(index >= 0){
+                if(amount == 0){
+                    basket.products.removeAt(index)
+                } else {
+                    basket.products[index].amount = amount
+                }
             } else {
-                basket.productsAmount.add(index, amount)
-                basket.productsAmount.removeAt(index + 1)
+                println("Cannot edit product amount of product which doesn't exist")
             }
             this.refreshTotalPrice()
+        }
+
+        fun undoRecentlyAddedProduct(): Boolean{
+            val index = basket.products.indexOfFirst { it -> it.product == recentlyAdded?.product }
+            if(recentlyAdded != null && recentlyAdded!!.amount > 0 && index > -1){
+                if(basket.products[index].amount == recentlyAdded!!.amount){
+                    basket.products.removeAt(index)
+                } else {
+                    basket.products[index].amount -= recentlyAdded!!.amount
+                }
+                refreshTotalPrice()
+                return true
+            } else {
+                return false
+            }
         }
 
 
@@ -46,7 +66,7 @@ object OrderService {
             basket.orderType = OrderType.DELIVERY
 
             Http.authPost("/orders/make-order", basket, Order::class.java, callback)
-            crearBasket()
+            clearBasket()
         }
 
         fun makeSelfPickupOrder(restaurantId: Long, callback: OrderCallback) {
@@ -54,7 +74,7 @@ object OrderService {
             basket.orderType = OrderType.SELF_PICKUP
 
             Http.authPost("/orders/make-order", basket, Order::class.java, callback)
-            crearBasket()
+            clearBasket()
         }
 
         fun getActualOrders(callback: OrderArrayCallback) {
@@ -67,13 +87,14 @@ object OrderService {
 
         private fun refreshTotalPrice() {
             basket.totalPrize = 0f
-            for (i in 0 until basket.products.size) {
-                basket.totalPrize += basket.products[i].price * basket.productsAmount[i]
+            basket.products.forEach {
+                basket.totalPrize += it.amount * it.product.price
             }
         }
 
-    private fun crearBasket(){
-        basket = Basket(products = arrayListOf(), productsAmount = arrayListOf(), totalPrize = 0f, orderType = null, restaurantId = null, deliveryAddressId = null)
+    private fun clearBasket(){
+        basket = Basket(products = mutableListOf(), totalPrize = 0f, orderType = null, restaurantId = null, deliveryAddressId = null)
 
     }
+
 }

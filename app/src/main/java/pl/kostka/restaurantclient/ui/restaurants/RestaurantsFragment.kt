@@ -19,6 +19,7 @@ import pl.kostka.restaurantclient.service.RestaurantService
 import pl.kostka.restaurantclient.service.callback.RestaurantArrayCallback
 import java.lang.Exception
 import android.widget.Toast
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.RestaurantCallback
 import pl.kostka.restaurantclient.ui.main.MainActivity
@@ -109,13 +110,15 @@ class RestaurantsFragment: Fragment(){
                     button_restaurant_details_select.setOnClickListener {
                         if(activity!! is RestaurantActivity) {
                             UserService.selectRestaurant(selectedRestaurant!!.id, object : RestaurantCallback{
-                                override fun onResponse(restaurant: Restaurant) {
+                                override fun onResponse(response: Restaurant) {
                                     activity?.setResult(Activity.RESULT_OK)
                                     activity?.finish()
                                 }
 
-                                override fun onFailure(errMessage: String) {
-                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                override fun onFailure(error: ErrorResponse) {
+                                    this@RestaurantsFragment.activity!!.runOnUiThread {
+                                        Toast.makeText(this@RestaurantsFragment.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                    }
                                 }
                             })
 
@@ -127,8 +130,10 @@ class RestaurantsFragment: Fragment(){
 
             }
 
-            override fun onFailure(errMessage: String) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onFailure(error: ErrorResponse) {
+                this@RestaurantsFragment.activity!!.runOnUiThread {
+                    Toast.makeText(this@RestaurantsFragment.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                }
             }
         })
 

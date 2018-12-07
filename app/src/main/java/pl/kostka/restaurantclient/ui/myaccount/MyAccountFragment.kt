@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_address.*
 import kotlinx.android.synthetic.main.content_myaccount.*
 import kotlinx.android.synthetic.main.content_myaccount.view.*
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.User
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.UserService
@@ -66,29 +67,29 @@ class MyAccountFragment: Fragment(){
 
     private fun refreshView() {
         UserService.getUser(object : UserCallback{
-            override fun onResponse(user: User) {
+            override fun onResponse(response: User) {
                 activity?.runOnUiThread {
-                    textView_myaccount_name.text = user.name
-                    textView_myaccount_surname.text = user.surname
-                    textView_myaccount_email.text = user.email
-                    textView_myaccount_phone.text = user.phoneNumber
+                    textView_myaccount_name.text = response.name
+                    textView_myaccount_surname.text = response.surname
+                    textView_myaccount_email.text = response.email
+                    textView_myaccount_phone.text = response.phoneNumber
 
-                    if(user.selectedAddress != null){
-                        var address = "${user.selectedAddress!!.street} ${user.selectedAddress!!.buildingNumber}"
-                        if(user.selectedAddress!!.apartmentNumber != null)
-                            address += "/${user.selectedAddress!!.apartmentNumber!!}"
-                        address += ", ${user.selectedAddress!!.city}"
+                    if(response.selectedAddress != null){
+                        var address = "${response.selectedAddress!!.street} ${response.selectedAddress!!.buildingNumber}"
+                        if(response.selectedAddress!!.apartmentNumber != null)
+                            address += "/${response.selectedAddress!!.apartmentNumber!!}"
+                        address += ", ${response.selectedAddress!!.city}"
 
                         textView_myaccount_adress.text = address
                     }
 
-                    this@MyAccountFragment.user = user
+                    this@MyAccountFragment.user = response
                 }
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
-                    Toast.makeText(this@MyAccountFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MyAccountFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
             }
         })
@@ -121,7 +122,7 @@ class MyAccountFragment: Fragment(){
                     }
                     R.string.surname_c -> when(validateSurname(editText)) {
                         true -> editUser(progressBar, dialog)
-                        true -> progressBar.visibility = View.INVISIBLE
+                        false -> progressBar.visibility = View.INVISIBLE
                     }
                     R.string.email_c -> validateEmail(editText, progressBar, dialog)
 
@@ -140,7 +141,7 @@ class MyAccountFragment: Fragment(){
 
     private fun editUser(progressBar: ProgressBar, dialog: AlertDialog) {
         UserService.editUser(user!!, object : UserCallback{
-            override fun onResponse(user: User) {
+            override fun onResponse(response: User) {
                 activity?.runOnUiThread {
                 refreshView()
                 progressBar.visibility = View.INVISIBLE
@@ -149,7 +150,7 @@ class MyAccountFragment: Fragment(){
 
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
                     progressBar.visibility = View.INVISIBLE
                 }
@@ -191,21 +192,22 @@ class MyAccountFragment: Fragment(){
             UserService.checkIfEmailIsFree(email.text.toString(), object : BooleanCallback {
                 override fun onResponse(response: Boolean) {
                     if(response){
-                       /* activity?.runOnUiThread {
-                         //   this@MyAccountFragment.user?.email = email.text.toString()
-                           // editUser(progressBar, dialog)
-                        }*/
+                        activity?.runOnUiThread {
+                            this@MyAccountFragment.user?.email = email.text.toString()
+                            editUser(progressBar, dialog)
+                        }
                     } else {
-                     /*   activity?.runOnUiThread {
+                        activity?.runOnUiThread {
                             email.error = "Email jest już zajęty"
-                        }*/
+                            progressBar.visibility = View.INVISIBLE
+                        }
                     }
                 }
 
-                override fun onFailure(errMessage: String) {
-                 /*   activity?.runOnUiThread {
-                        Toast.makeText(this@MyAccountFragment.context, errMessage, Toast.LENGTH_LONG).show()
-                    }*/
+                override fun onFailure(error: ErrorResponse) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(this@MyAccountFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
+                    }
                 }
             })
 

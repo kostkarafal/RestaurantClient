@@ -1,6 +1,8 @@
 package pl.kostka.restaurantclient.service.callback
 
-interface VoidCallback {
+import pl.kostka.restaurantclient.model.ErrorResponse
+
+interface VoidCallback{
     fun onResponse()
-    fun onFailure(errMessage: String)
+    fun onFailure(error: ErrorResponse)
 }

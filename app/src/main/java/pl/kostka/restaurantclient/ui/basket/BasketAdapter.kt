@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.basket_total_price_item.*
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.model.ProductAmount
 import pl.kostka.restaurantclient.service.OrderService
 
 class BasketAdapter(val basket: Basket, val activity: Activity): RecyclerView.Adapter<BasketViewHolder>() {
@@ -27,11 +28,12 @@ class BasketAdapter(val basket: Basket, val activity: Activity): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {
-            val product = basket.products.get(position)
+            val product = basket.products[position].product
+            val amount = basket.products[position].amount
             holder.view.textView_basket_product_title?.text = product.name
             holder.view.textView_basket_product_details?.text = product.description
-            holder.view.textView_basket_product_price?.text = String.format("%.2f", basket.productsAmount.get(position) * product.price)
-            holder.view.textView_basket_product_amount?.text = basket.productsAmount.get(position).toString()
+            holder.view.textView_basket_product_price?.text = String.format("%.2f", basket.products[position].amount * product.price)
+            holder.view.textView_basket_product_amount?.text = basket.products[position].amount.toString()
 
             holder.view.imageButton_basket_edit.setOnClickListener {
                 handleEditOrderModal(holder, position, product)
@@ -53,9 +55,9 @@ class BasketAdapter(val basket: Basket, val activity: Activity): RecyclerView.Ad
         val okButton = mView.findViewById<Button>(R.id.button_dialog_basket_ok)
 
 
-        textAmount.setText(basket.productsAmount.get(position).toString())
+        textAmount.setText(basket.products[position].amount.toString())
         title.text = product.name
-        price.text = String.format("%.2f", basket.productsAmount.get(position) * product.price)
+        price.text = String.format("%.2f", basket.products[position].amount * product.price)
 
         mBuilder.setView(mView)
         val dialog = mBuilder.create()

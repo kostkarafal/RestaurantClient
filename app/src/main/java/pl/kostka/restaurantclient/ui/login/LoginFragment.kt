@@ -18,6 +18,7 @@ import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import kotlinx.android.synthetic.main.content_login.*
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.TokenResponse
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
@@ -53,15 +54,16 @@ class LoginFragment: Fragment(){
                             activity?.runOnUiThread {
                                 fragmentManager?.beginTransaction()?.replace(R.id.fragment_container, MainFragment())?.commit()
                                 LoginManager.getInstance().logOut()
-                                // TODO handle adding phone number
                             }
                             progressBar.visibility = View.INVISIBLE
                         }
 
-                        override fun onFailure(errMessage: String) {
+                        override fun onFailure(error: ErrorResponse) {
                             activity?.runOnUiThread {
-                                println(errMessage)
-                                Toast.makeText(this@LoginFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                                println(error)
+                                LoginManager.getInstance().logOut()
+                                progressBar.visibility = View.INVISIBLE
+                                Toast.makeText(this@LoginFragment.context, error.message, Toast.LENGTH_LONG).show()
                             }                        }
                     })
             }

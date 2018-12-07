@@ -26,7 +26,7 @@
     <string name="order">Zamówienie</string>
     <string name="confirm_order">Potwierdź zamówienie</string>
     <string name="undo">Wycofaj</string>
-    <string name="AddedItemToBasket">Dodano produkt do koszyka</string>
+    <string name="AddedItemToBasket">Dodano produkt/y do koszyka</string>
     <string name="total">Łącznie</string>
     <string name="change_amount">Zmień ilość</string>
     <string name="title">Tytuł</string>
@@ -70,4 +70,8 @@
     <string name="delivery_address">Adres dostawy</string>
     <string name="yours_restaurant">Twoja restauracja</string>
     <string name="select">Wybierz</string>
+    <string name="select_pickup_option">Wybierz sposób odbioru</string>
+    <string name="empty_address_list">Brak adresów</string>
+    <string name="no_selected_address">Brak wybranego adresu</string>
+    <string name="no_phone_number">Brak numeru telefonu</string>
 </resources>

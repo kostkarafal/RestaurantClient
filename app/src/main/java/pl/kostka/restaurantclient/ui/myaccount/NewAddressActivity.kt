@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_new_address.*
 
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.AddressService
 import pl.kostka.restaurantclient.service.callback.AddressCallback
 import java.lang.Exception
@@ -128,9 +129,9 @@ class NewAddressActivity : AppCompatActivity() {
                             }
                         }
 
-                        override fun onFailure(errMessage: String) {
+                        override fun onFailure(error: ErrorResponse) {
                             runOnUiThread {
-                                Toast.makeText(this@NewAddressActivity, errMessage, Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@NewAddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
                             }
                         }
                     })
@@ -143,9 +144,9 @@ class NewAddressActivity : AppCompatActivity() {
                             }
                         }
 
-                        override fun onFailure(errMessage: String) {
+                        override fun onFailure(error: ErrorResponse) {
                             runOnUiThread {
-                                Toast.makeText(this@NewAddressActivity, errMessage, Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@NewAddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
                             }
                         }
                     })

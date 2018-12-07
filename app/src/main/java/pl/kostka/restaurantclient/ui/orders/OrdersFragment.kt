@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.enums.OrderStatus
 import pl.kostka.restaurantclient.service.OrderService
@@ -51,9 +52,9 @@ class OrdersFragment: Fragment(){
                 }
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
-                    Toast.makeText(this@OrdersFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@OrdersFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
             }
         })
@@ -65,9 +66,9 @@ class OrdersFragment: Fragment(){
                 }
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
-                    Toast.makeText(this@OrdersFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@OrdersFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
             }
         })

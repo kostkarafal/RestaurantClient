@@ -7,18 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_address.*
 import kotlinx.android.synthetic.main.address_row.view.*
 
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.AddressService
 import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.AddressArrayCallback
 import pl.kostka.restaurantclient.service.callback.AddressCallback
 import pl.kostka.restaurantclient.service.callback.VoidCallback
+import pl.kostka.restaurantclient.service.listener.OnChangeListener
+import kotlin.properties.Delegates
 
-class AddressAdapter(var addresses: List<Address>, val activity: Activity,private var lastSelectedPosition: Int,val isAddressSupported: Boolean): RecyclerView.Adapter<AddresViewHolder>() {
+class AddressAdapter(val addressList: List<Address>, val activity: Activity,private var lastSelectedPosition: Int,val isAddressSupported: Boolean,val addressListListener: OnChangeListener): RecyclerView.Adapter<AddresViewHolder>() {
 
+    var addresses: List<Address>  by Delegates.observable(
+            initialValue = addressList,
+            onChange = {
+                _, _, _ ->
+                addressListListener.onChange(addresses.size)
+            } )
 
     override fun getItemCount(): Int {
         return addresses.size
@@ -44,23 +54,44 @@ class AddressAdapter(var addresses: List<Address>, val activity: Activity,privat
         holder.view.imageButton_address_delete.setOnClickListener {
             AddressService.deleteAddress(address.id!!, object : VoidCallback {
                 override fun onResponse() {
-                   AddressService.getAddresses(object : AddressArrayCallback {
-                       override fun onResponse(response: Array<Address>) {
-                           this@AddressAdapter.activity.runOnUiThread {
-                               addresses = response.toList()
-                               if(lastSelectedPosition == position)
-                                   lastSelectedPosition = -1
-                               notifyDataSetChanged()
-                           }
-                       }
+                    if(isAddressSupported) {
+                        AddressService.getAddresses(object : AddressArrayCallback {
+                            override fun onResponse(response: Array<Address>) {
+                                this@AddressAdapter.activity.runOnUiThread {
+                                    addresses = response.toList()
+                                    if (lastSelectedPosition == position)
+                                        lastSelectedPosition = -1
+                                    notifyDataSetChanged()
+                                }
+                            }
 
-                       override fun onFailure(errMessage: String) {
-                           TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                       }
-                   })
+                            override fun onFailure(error: ErrorResponse) {
+                                this@AddressAdapter.activity.runOnUiThread {
+                                    Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        })
+                    } else {
+                        AddressService.getUnsupportedAddresses(object : AddressArrayCallback {
+                            override fun onResponse(response: Array<Address>) {
+                                this@AddressAdapter.activity.runOnUiThread {
+                                    addresses = response.toList()
+                                    if (lastSelectedPosition == position)
+                                        lastSelectedPosition = -1
+                                    notifyDataSetChanged()
+                                }
+                            }
+
+                            override fun onFailure(error: ErrorResponse) {
+                                this@AddressAdapter.activity.runOnUiThread {
+                                    Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        })
+                    }
                 }
 
-                override fun onFailure(errMessage: String) {
+                override fun onFailure(error: ErrorResponse) {
 
                 }
             })
@@ -78,13 +109,13 @@ class AddressAdapter(var addresses: List<Address>, val activity: Activity,privat
                 lastSelectedPosition = position
                 notifyDataSetChanged()
                 UserService.selectDeliveryAddress(address.id!!, object : AddressCallback {
-                    override fun onResponse(address: Address) {
+                    override fun onResponse(response: Address) {
 
                     }
 
-                    override fun onFailure(errMessage: String) {
+                    override fun onFailure(error: ErrorResponse) {
                         this@AddressAdapter.activity.runOnUiThread {
-                            Toast.makeText(this@AddressAdapter.activity, errMessage, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
                         }
                     }
                 })

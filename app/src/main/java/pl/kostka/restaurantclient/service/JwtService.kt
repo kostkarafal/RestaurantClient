@@ -18,7 +18,7 @@ object JwtService {
         var isLoggedIn: Boolean by Delegates.observable(
                 initialValue = false,
                 onChange = {
-                    property, oldValue, newValue ->
+                   _, _, newValue ->
                     listener?.onChange(newValue)
                 }
         )

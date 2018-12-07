@@ -1,7 +1,5 @@
 package pl.kostka.restaurantclient.ui.login
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -10,14 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.content_login.*
-import kotlinx.android.synthetic.main.content_register.*
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.User
-import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.BooleanCallback
-import pl.kostka.restaurantclient.service.callback.LoginResponseCallback
 import pl.kostka.restaurantclient.service.callback.UserCallback
 import pl.kostka.restaurantclient.ui.main.MainFragment
 
@@ -77,44 +72,44 @@ class RegisterFragment: Fragment(){
          phoneImage = view.findViewById(R.id.imageView_register_phone)
          emailImage = view.findViewById(R.id.imageView_register_email)
 
-        username?.setOnFocusChangeListener { v, hasFocus ->
+        username?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 validateUsername()
             }
         }
 
-        password?.setOnFocusChangeListener { v, hasFocus ->
+        password?.setOnFocusChangeListener { _, hasFocus ->
             if(!hasFocus) {
                validatePassword()
             }
         }
 
-        repassword?.setOnFocusChangeListener { v, hasFocus ->
+        repassword?.setOnFocusChangeListener { _, hasFocus ->
             if(!hasFocus) {
                validateRepassword()
             }
         }
 
-        name?.setOnFocusChangeListener { v, hasFocus ->
+        name?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                validateName()
             }
         }
 
-        surname?.setOnFocusChangeListener { v, hasFocus ->
+        surname?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 validateSurname()
             }
         }
 
-        phone?.setOnFocusChangeListener { v, hasFocus ->
+        phone?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                validatePhone()
             }
         }
 
 
-        email?.setOnFocusChangeListener { v, hasFocus ->
+        email?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 validateEmail()
             }
@@ -132,16 +127,16 @@ class RegisterFragment: Fragment(){
                                 email = email!!.text.toString(),
                                 phoneNumber = phone!!.text.toString())
                 UserService.registerUser(user, object: UserCallback {
-                    override fun onResponse(user: User) {
+                    override fun onResponse(response: User) {
                         activity?.runOnUiThread {
                             Snackbar.make(view, "Utworzono nowe konto, możesz się zalogować", Snackbar.LENGTH_LONG).show()
                             fragmentManager?.beginTransaction()?.replace(R.id.fragment_container, MainFragment())?.commit()
                         }
                     }
 
-                    override fun onFailure(errMessage: String) {
+                    override fun onFailure(error: ErrorResponse) {
                         activity?.runOnUiThread {
-                            Toast.makeText(this@RegisterFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@RegisterFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                         }
                     }
                 })
@@ -189,9 +184,9 @@ class RegisterFragment: Fragment(){
                     }
                 }
 
-                override fun onFailure(errMessage: String) {
+                override fun onFailure(error: ErrorResponse) {
                     activity?.runOnUiThread {
-                        Toast.makeText(this@RegisterFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@RegisterFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                     }
                 }
             })
@@ -221,9 +216,9 @@ class RegisterFragment: Fragment(){
                     }
                 }
 
-                override fun onFailure(errMessage: String) {
+                override fun onFailure(error: ErrorResponse) {
                     activity?.runOnUiThread {
-                        Toast.makeText(this@RegisterFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@RegisterFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                     }
                 }
             })

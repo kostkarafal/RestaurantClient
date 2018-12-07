@@ -4,5 +4,5 @@ import pl.kostka.restaurantclient.model.User
 
 
 interface UserCallback : MainCallback<User>{
-    override fun onResponse(user: User)
+    override fun onResponse(response: User)
 }

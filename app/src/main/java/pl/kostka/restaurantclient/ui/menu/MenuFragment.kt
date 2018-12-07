@@ -14,7 +14,9 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import pl.kostka.restaurantclient.R
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.model.Product
+import pl.kostka.restaurantclient.service.OrderService
 import pl.kostka.restaurantclient.service.ProductService
 import pl.kostka.restaurantclient.service.callback.ProductArrayCallback
 import pl.kostka.restaurantclient.ui.basket.BasketActivity
@@ -31,15 +33,15 @@ class MenuFragment: Fragment(){
 
 
         ProductService.getMenu(object : ProductArrayCallback{
-            override fun onResponse(menu: Array<Product>) {
+            override fun onResponse(response: Array<Product>) {
                 activity?.runOnUiThread {
-                    recyclerView.adapter = MenuAdapter(menu.toList(), this@MenuFragment)
+                    recyclerView.adapter = MenuAdapter(response.toList(), this@MenuFragment)
                     progressBar.visibility = View.INVISIBLE
                 }
             }
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
-                    Toast.makeText(this@MenuFragment.context, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MenuFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
                 progressBar.visibility = View.INVISIBLE
             }
@@ -59,8 +61,10 @@ class MenuFragment: Fragment(){
         if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             Snackbar.make(this@MenuFragment.view!!, getString(R.string.AddedItemToBasket), Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
-                        println("canceling recently added order")
-                        //TODO cancel recently added order
+                        println("Canceling recently added product to basket")
+                        if(OrderService.undoRecentlyAddedProduct()) {
+                            Snackbar.make(this@MenuFragment.view!!, getString(R.string.canceled), Snackbar.LENGTH_LONG).show()
+                        }
                     }.show()
         } else if (resultCode == Activity.RESULT_OK && requestCode == 2) {
             activity?.runOnUiThread {

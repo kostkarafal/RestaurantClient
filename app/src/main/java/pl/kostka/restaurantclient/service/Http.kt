@@ -3,6 +3,7 @@ package pl.kostka.restaurantclient.service
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import pl.kostka.restaurantclient.BuildConfig
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.callback.GetAuthHeaderCallback
 import pl.kostka.restaurantclient.service.callback.MainCallback
 import pl.kostka.restaurantclient.service.callback.VoidCallback
@@ -11,9 +12,8 @@ import java.io.IOException
 object Http {
     private const val hostUrl = BuildConfig.HOST_URL
     private val gson = GsonBuilder().create()
-    private val mediaType = MediaType.parse("application/json; charset=utf-8")
+    private val mediaType = MediaType.parse("application/json")
     private val client = OkHttpClient()
-    private const val SERVER_CONNECTION_ERROR = "Błąd połączenia z serwerem"
 
 
     fun get(url: String, responseClass: Class<out Any>, callbackAny: Any) {
@@ -54,7 +54,7 @@ object Http {
 
             override fun onFailure(errMessage: String) {
                 val callback = castCallbackToAny(callbackAny)
-                callback.onFailure(errMessage)
+                callback.onFailure(ErrorResponse(message = errMessage))
             }
         })
     }
@@ -73,7 +73,7 @@ object Http {
 
             override fun onFailure(errMessage: String) {
                 val callback = castCallbackToAny(callbackAny)
-                callback.onFailure(errMessage)
+                callback.onFailure(ErrorResponse(message = errMessage))
             }
         })
     }
@@ -89,7 +89,7 @@ object Http {
             }
             override fun onFailure(errMessage: String) {
                 val callback = castCallbackToAny(callbackAny)
-                callback.onFailure(errMessage)
+                callback.onFailure(ErrorResponse(message = errMessage))
             }
         })
     }
@@ -104,7 +104,7 @@ object Http {
                 runVoidRequest(request, callback)
             }
             override fun onFailure(errMessage: String) {
-                callback.onFailure(errMessage)
+                callback.onFailure(ErrorResponse(message = errMessage))
             }
         })
     }
@@ -115,12 +115,14 @@ object Http {
                 if(response.code() == 200) {
                     callback.onResponse()
                 } else {
-                    callback.onFailure(response.code().toString() + " " + response.message())
+                    val body = response.body()?.string()
+                    val result = gson.fromJson(body, ErrorResponse::class.java)
+                    callback.onFailure(result)
                 }
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                callback.onFailure(SERVER_CONNECTION_ERROR)
+                callback.onFailure(ErrorResponse())
             }
         })
     }
@@ -133,7 +135,7 @@ object Http {
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                callback.onFailure(SERVER_CONNECTION_ERROR)
+                callback.onFailure(ErrorResponse())
             }
         })
     }
@@ -150,7 +152,9 @@ object Http {
                 val result = gson.fromJson(body, bodyClass)
                 callback.onResponse(result)
         } else {
-            callback.onFailure(response.code().toString() + " " +response.message())
+            val body = response.body()?.string()
+            val result = gson.fromJson(body, ErrorResponse::class.java)
+            callback.onFailure(result)
         }
     }
 

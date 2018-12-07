@@ -2,25 +2,36 @@ package pl.kostka.restaurantclient.ui.myaccount
 
 import android.app.Activity
 import android.content.Intent
+import android.net.sip.SipAudioCall
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_address.*
 
 import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.Address
+import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.AddressService
+import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.service.callback.AddressArrayCallback
+import pl.kostka.restaurantclient.service.listener.IsLoggdInListener
+import pl.kostka.restaurantclient.service.listener.OnChangeListener
+import kotlin.properties.Delegates
 
 class AddressActivity : AppCompatActivity() {
 
     var recyclerView: RecyclerView? = null
     var recyclerView2: RecyclerView? = null
     var selectedAddressId = -1L
+
+    var addressListSize: Int = 0
+    var unsupportedAddressListSize: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,37 +54,71 @@ class AddressActivity : AppCompatActivity() {
             val intent = Intent(it.context, NewAddressActivity::class.java)
             startActivityForResult(intent, 1)
         }
-
     }
+
+
 
     private fun refreshAddressList() {
         AddressService.getAddresses(object : AddressArrayCallback {
             override fun onResponse(response: Array<Address> ) {
                 runOnUiThread {
+                    addressListSize = response.size
+                    checkIfListsAreEmpty()
                     val result = response.find { address -> address.id!!.equals(selectedAddressId)}
-                    recyclerView!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, response.indexOf(result), true )
+                    recyclerView!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, response.indexOf(result), true, object : OnChangeListener{
+                        override fun onChange(size: Int) {
+                            addressListSize = size
+                            checkIfListsAreEmpty()
+                        }
+                    })
                 }
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
-                    Toast.makeText(this@AddressActivity, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
             }
         })
         AddressService.getUnsupportedAddresses(object : AddressArrayCallback {
             override fun onResponse(response: Array<Address> ) {
                 runOnUiThread {
-                    recyclerView2!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, -1, false)
+                    unsupportedAddressListSize = response.size
+                    checkUnsupportedList()
+                    recyclerView2!!.adapter = AddressAdapter(response.toList(), this@AddressActivity, -1, false, object : OnChangeListener{
+                        override fun onChange(size: Int) {
+                            unsupportedAddressListSize = size
+                            checkUnsupportedList()
+                        }
+                    })
                 }
             }
 
-            override fun onFailure(errMessage: String) {
+            override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
-                    Toast.makeText(this@AddressActivity, errMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
                 }
             }
         })
+    }
+
+    private fun checkIfListsAreEmpty(){
+        if(addressListSize == 0 && unsupportedAddressListSize == 0) {
+            textView_address_empty_list.visibility = View.VISIBLE
+        } else
+        {
+            textView_address_empty_list.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun checkUnsupportedList(){
+        checkIfListsAreEmpty()
+        if(unsupportedAddressListSize > 0){
+            textView_adress_to_far.visibility = View.VISIBLE
+        } else {
+            textView_adress_to_far.visibility = View.INVISIBLE
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -93,7 +138,11 @@ class AddressActivity : AppCompatActivity() {
     }
 
      override fun onBackPressed() {
-        setResult(Activity.RESULT_OK)
+         if(selectedAddressId == -1L){
+             setResult(Activity.RESULT_CANCELED)
+         } else {
+             setResult(Activity.RESULT_OK)
+         }
         finish()
     }
 }

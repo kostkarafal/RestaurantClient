@@ -79,7 +79,7 @@
         completions."
     </string>
     <string name="undo">Undo</string>
-    <string name="AddedItemToBasket">Added item to basket</string>
+    <string name="AddedItemToBasket">Added item/s to basket</string>
     <string name="total">Total</string>
     <string name="change_amount">Change amount</string>
     <string name="title">Title</string>
@@ -125,5 +125,9 @@
     <string name="delivery_address">Delivery address</string>
     <string name="yours_restaurant">Yours_restaurant</string>
     <string name="select">Select</string>
+    <string name="select_pickup_option">Select pickup option</string>
+    <string name="empty_address_list">No addressess</string>
+    <string name="no_selected_address">No selected addres</string>
+    <string name="no_phone_number">No phone number</string>
 
 </resources>
