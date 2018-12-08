@@ -10,4 +10,12 @@ data class Address (var id: Long? = null,
                     var apartmentNumber: String? = null,
                     var title: String,
                     var longitude: Double,
-                    var latitude: Double) : Serializable
+                    var latitude: Double) : Serializable {
+
+    fun getFullAddressString():String {
+        var result = "$title: $street $buildingNumber"
+        if(apartmentNumber != null) result += "/$apartmentNumber"
+        result += ", $city"
+        return result
+    }
+}

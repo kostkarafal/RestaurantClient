@@ -1,8 +1,12 @@
 package pl.kostka.restaurantclient.ui.restaurants
 
 import android.app.Activity
+
+import android.location.Location
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +23,7 @@ import pl.kostka.restaurantclient.service.RestaurantService
 import pl.kostka.restaurantclient.service.callback.RestaurantArrayCallback
 import java.lang.Exception
 import android.widget.Toast
+import com.google.android.gms.location.*
 import pl.kostka.restaurantclient.model.ErrorResponse
 import pl.kostka.restaurantclient.service.UserService
 import pl.kostka.restaurantclient.service.callback.RestaurantCallback
@@ -29,42 +34,42 @@ import java.util.*
 
 class RestaurantsFragment: Fragment(){
 
-    var mMapView: MapView? = null
+    private var mMapView: MapView? = null
     var googleMap: GoogleMap? = null
 
     var restaurants: List<Restaurant> = Arrays.asList()
     var selectedRestaurant: Restaurant? = null
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.content_restaurants, container, false)
-
         mMapView = view.findViewById(R.id.mapView) as MapView?
         mMapView!!.onCreate(savedInstanceState)
-
         mMapView!!.onResume()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
+        mMapView!!.getMapAsync {
+            googleMap = it
+        }
+
+        if(checkSelfPermission(activity!!, android.Manifest.permission.ACCESS_FINE_LOCATION) == -1){
+            val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            ActivityCompat.requestPermissions(activity!!, permissions,0)
+        }
+
+        fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    val cameraPosition = CameraPosition.Builder().target(LatLng(location!!.latitude, location.longitude)).zoom(10f).build()
+                    googleMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))                }
         try {
             MapsInitializer.initialize(activity?.applicationContext)
         } catch (e: Exception){
             e.printStackTrace()
         }
 
-        var startLocation = LatLng(52.237049, 21.017532)
-        var mapZoom = 5f
-
-        mMapView!!.getMapAsync {
-            googleMap = it
-
-            val cameraPosition = CameraPosition.Builder().target(startLocation).zoom(mapZoom).build()
-            googleMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        }
-
-
-
-
-        //TODO handle case of having more than one restaurant
         RestaurantService.getRestaurants(object: RestaurantArrayCallback {
             override fun onResponse(response: Array<Restaurant>) {
                 restaurants = response.toList()
@@ -72,16 +77,7 @@ class RestaurantsFragment: Fragment(){
                    val latLng = LatLng(it.latitude, it.longitude)
                    val restaurantId = it.id
                    activity?.runOnUiThread {
-                       mMapView!!.getMapAsync {
-                           googleMap = it
-
-                           googleMap!!.addMarker(MarkerOptions().position(latLng).title(restaurantId.toString()))
-
-                           val cameraPosition = CameraPosition.Builder().target(latLng).zoom(15f).build()
-
-                           googleMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-
-                       }
+                       googleMap!!.addMarker(MarkerOptions().position(latLng).title(restaurantId.toString()))
                    }
                }
                 activity?.runOnUiThread {
@@ -123,7 +119,17 @@ class RestaurantsFragment: Fragment(){
                             })
 
                         } else if (activity!! is MainActivity) {
-                            activity!!.supportFragmentManager!!.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+                            UserService.selectRestaurant(selectedRestaurant!!.id, object : RestaurantCallback{
+                                override fun onResponse(response: Restaurant) {
+                                    activity!!.supportFragmentManager!!.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+                                }
+
+                                override fun onFailure(error: ErrorResponse) {
+                                    this@RestaurantsFragment.activity!!.runOnUiThread {
+                                        Toast.makeText(this@RestaurantsFragment.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            })
                         }
                     }
                 }

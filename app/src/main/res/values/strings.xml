@@ -1,13 +1,13 @@
 <resources>
     <string-array name="home_elements">
         <item>Menu</item>
-        <item>Restaurants</item>
-        <item>Orders</item>
+        <item>@string/restaurants</item>
+        <item>@string/orders</item>
     </string-array>
     <string-array name="home_elements_description">
-        <item>Przejdz do menu</item>
-        <item>Zobacz gdzie znajduje się najbliższa restauracja</item>
-        <item>Zobacz swoje zamówienia</item>
+        <item>@string/go_to_menu</item>
+        <item>@string/look_where_is_nearest_restaurant</item>
+        <item>@string/check_your_orders</item>
     </string-array>
     <string-array name="home_elements_icons">
         <item>ic_restaurant_menu_24dp</item>
@@ -106,14 +106,14 @@
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="phone_number">Phone number</string>
-    <string name="adress">Adress</string>
+    <string name="adress">Address</string>
     <string name="surname">Surname</string>
     <string name="old_c">Old:</string>
     <string name="new_c">New:</string>
     <string name="change">Change</string>
     <string name="adress_to_far">Address too far away from restaurant</string>
     <string name="address">Address</string>
-    <string name="add_new_address">Add new addres</string>
+    <string name="add_new_address">Add new address</string>
     <string name="city">City</string>
     <string name="street">Street</string>
     <string name="building_number">Building number</string>
@@ -126,8 +126,21 @@
     <string name="yours_restaurant">Yours_restaurant</string>
     <string name="select">Select</string>
     <string name="select_pickup_option">Select pickup option</string>
-    <string name="empty_address_list">No addressess</string>
-    <string name="no_selected_address">No selected addres</string>
+    <string name="empty_address_list">No addresses</string>
+    <string name="no_selected_address">No selected address</string>
     <string name="no_phone_number">No phone number</string>
+    <string name="finished_orders">Finished orders</string>
+    <string name="no_orders">No orders</string>
+    <string name="license_content">"All images in app are licensed under creative commons provided by https://www.pexels.com/. For more details about license and photos please visit website  visit website. "</string>
+    <string name="license">License</string>
+    <string name="author_credentials">Application author: Rafał Kostka</string>
+    <string name="author_email" translatable="false">kostka.arx@gmail.com</string>
+    <string name="author_github" translatable="false">https://github.com/kostkarafal</string>
+    <string name="author_linkedIn" translatable="false">https://www.linkedin.com/in/rafa%C5%82-kostka-7b439013a/</string>
+    <string name="github_c" translatable="false">Github:</string>
+    <string name="linkedin" translatable="false">LinkedIn:</string>
+    <string name="go_to_menu">Go to menu</string>
+    <string name="look_where_is_nearest_restaurant">Look where is nearest restaurant</string>
+    <string name="check_your_orders">Check your orders</string>
 
 </resources>

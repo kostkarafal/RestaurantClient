@@ -29,7 +29,6 @@ class BasketAdapter(val basket: Basket, val activity: Activity): RecyclerView.Ad
 
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {
             val product = basket.products[position].product
-            val amount = basket.products[position].amount
             holder.view.textView_basket_product_title?.text = product.name
             holder.view.textView_basket_product_details?.text = product.description
             holder.view.textView_basket_product_price?.text = String.format("%.2f", basket.products[position].amount * product.price)

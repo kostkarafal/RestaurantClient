@@ -52,6 +52,7 @@ class AddressAdapter(val addressList: List<Address>, val activity: Activity,priv
 
 
         holder.view.imageButton_address_delete.setOnClickListener {
+            holder.view.progressBar_address_item.visibility = View.VISIBLE
             AddressService.deleteAddress(address.id!!, object : VoidCallback {
                 override fun onResponse() {
                     if(isAddressSupported) {
@@ -62,12 +63,15 @@ class AddressAdapter(val addressList: List<Address>, val activity: Activity,priv
                                     if (lastSelectedPosition == position)
                                         lastSelectedPosition = -1
                                     notifyDataSetChanged()
+                                    holder.view.progressBar_address_item.visibility = View.INVISIBLE
+
                                 }
                             }
 
                             override fun onFailure(error: ErrorResponse) {
                                 this@AddressAdapter.activity.runOnUiThread {
                                     Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                    holder.view.progressBar_address_item.visibility = View.INVISIBLE
                                 }
                             }
                         })
@@ -79,12 +83,14 @@ class AddressAdapter(val addressList: List<Address>, val activity: Activity,priv
                                     if (lastSelectedPosition == position)
                                         lastSelectedPosition = -1
                                     notifyDataSetChanged()
+                                    holder.view.progressBar_address_item.visibility = View.INVISIBLE
                                 }
                             }
 
                             override fun onFailure(error: ErrorResponse) {
                                 this@AddressAdapter.activity.runOnUiThread {
                                     Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                                    holder.view.progressBar_address_item.visibility = View.INVISIBLE
                                 }
                             }
                         })
@@ -92,7 +98,10 @@ class AddressAdapter(val addressList: List<Address>, val activity: Activity,priv
                 }
 
                 override fun onFailure(error: ErrorResponse) {
-
+                    this@AddressAdapter.activity.runOnUiThread {
+                        Toast.makeText(this@AddressAdapter.activity, error.getMsg(), Toast.LENGTH_LONG).show()
+                        holder.view.progressBar_address_item.visibility = View.INVISIBLE
+                    }
                 }
             })
         }

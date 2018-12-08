@@ -27,11 +27,12 @@ import pl.kostka.restaurantclient.ui.basket.BasketActivity
 class MyAccountFragment: Fragment(){
 
     var user:User? = null
+    var progressBar: ProgressBar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.content_myaccount, container, false)
-
-        refreshView()
+        progressBar = view.findViewById(R.id.progressBar_myaccount)
+        refreshView(progressBar!!)
 
         view.button_myaccount_name.setOnClickListener {
            handleChange(R.string.name_c, user!!.name)
@@ -60,12 +61,11 @@ class MyAccountFragment: Fragment(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
-           refreshView()
-        }
+        refreshView(progressBar!!)
     }
 
-    private fun refreshView() {
+    private fun refreshView(progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
         UserService.getUser(object : UserCallback{
             override fun onResponse(response: User) {
                 activity?.runOnUiThread {
@@ -81,6 +81,7 @@ class MyAccountFragment: Fragment(){
                         address += ", ${response.selectedAddress!!.city}"
 
                         textView_myaccount_adress.text = address
+                        progressBar.visibility = View.INVISIBLE
                     }
 
                     this@MyAccountFragment.user = response
@@ -90,6 +91,7 @@ class MyAccountFragment: Fragment(){
             override fun onFailure(error: ErrorResponse) {
                 activity?.runOnUiThread {
                     Toast.makeText(this@MyAccountFragment.context, error.getMsg(), Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.INVISIBLE
                 }
             }
         })
@@ -143,7 +145,7 @@ class MyAccountFragment: Fragment(){
         UserService.editUser(user!!, object : UserCallback{
             override fun onResponse(response: User) {
                 activity?.runOnUiThread {
-                refreshView()
+                refreshView(progressBar)
                 progressBar.visibility = View.INVISIBLE
                 dialog.hide()
                 }

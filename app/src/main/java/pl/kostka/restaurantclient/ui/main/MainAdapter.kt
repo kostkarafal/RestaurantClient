@@ -10,6 +10,7 @@ import pl.kostka.restaurantclient.R
 import pl.kostka.restaurantclient.model.HomeElement
 import pl.kostka.restaurantclient.service.JwtService
 import pl.kostka.restaurantclient.ui.menu.MenuFragment
+import pl.kostka.restaurantclient.ui.orders.OrdersFragment
 import pl.kostka.restaurantclient.ui.restaurants.RestaurantsFragment
 
 class MainAdapter(val homeElements: List<HomeElement>,val fragmentManager: FragmentManager): RecyclerView.Adapter<MainViewHolder>() {
@@ -42,10 +43,8 @@ class MainViewHolder(val view: View, val fragmentManager: FragmentManager): Recy
             when(view.textView_main_name.text) {
                 "Menu" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
                 "Restaurants" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, RestaurantsFragment()).commit()
+                "Orders" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, OrdersFragment()).commit()
             }
-//            if (view.textView_main_name.text.equals("Menu")) {
-//                fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
-//            }
         }
     }
 }

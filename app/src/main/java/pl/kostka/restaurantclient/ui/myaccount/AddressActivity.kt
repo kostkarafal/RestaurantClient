@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_address.*
 
@@ -32,15 +33,17 @@ class AddressActivity : AppCompatActivity() {
     var addressListSize: Int = 0
     var unsupportedAddressListSize: Int = 0
 
+    var progressBar: ProgressBar? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_address)
-
-        recyclerView = findViewById<RecyclerView>(R.id.recycler_ok_area_adresses)
+        progressBar = findViewById(R.id.progressBar_address)
+        recyclerView = findViewById(R.id.recycler_ok_area_adresses)
         recyclerView!!.layoutManager = LinearLayoutManager(applicationContext)
 
-        recyclerView2 = findViewById<RecyclerView>(R.id.recycler_wrong_area_adresses)
+        recyclerView2 = findViewById(R.id.recycler_wrong_area_adresses)
         recyclerView2!!.layoutManager = LinearLayoutManager(applicationContext)
 
         val result = intent.getSerializableExtra("selectedAddressId")
@@ -59,6 +62,7 @@ class AddressActivity : AppCompatActivity() {
 
 
     private fun refreshAddressList() {
+        progressBar!!.visibility = View.VISIBLE
         AddressService.getAddresses(object : AddressArrayCallback {
             override fun onResponse(response: Array<Address> ) {
                 runOnUiThread {
@@ -71,12 +75,16 @@ class AddressActivity : AppCompatActivity() {
                             checkIfListsAreEmpty()
                         }
                     })
+                    progressBar!!.visibility = View.INVISIBLE
+
                 }
             }
 
             override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
                     Toast.makeText(this@AddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
+                    progressBar!!.visibility = View.INVISIBLE
+
                 }
             }
         })
@@ -91,12 +99,15 @@ class AddressActivity : AppCompatActivity() {
                             checkUnsupportedList()
                         }
                     })
+                    progressBar!!.visibility = View.INVISIBLE
                 }
             }
 
             override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
                     Toast.makeText(this@AddressActivity, error.getMsg(), Toast.LENGTH_LONG).show()
+                    progressBar!!.visibility = View.INVISIBLE
+
                 }
             }
         })
@@ -105,6 +116,7 @@ class AddressActivity : AppCompatActivity() {
     private fun checkIfListsAreEmpty(){
         if(addressListSize == 0 && unsupportedAddressListSize == 0) {
             textView_address_empty_list.visibility = View.VISIBLE
+            progressBar!!.visibility = View.INVISIBLE
         } else
         {
             textView_address_empty_list.visibility = View.INVISIBLE

@@ -1,25 +1,17 @@
-package pl.kostka.restaurantclient.ui.basket
+package pl.kostka.restaurantclient.ui.orders
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import kotlinx.android.synthetic.main.activity_basket.*
-import kotlinx.android.synthetic.main.basket_product_row.view.*
-import kotlinx.android.synthetic.main.basket_total_price_item.*
 import kotlinx.android.synthetic.main.order_row.view.*
 import pl.kostka.restaurantclient.R
-import pl.kostka.restaurantclient.model.Basket
 import pl.kostka.restaurantclient.model.Order
 import pl.kostka.restaurantclient.model.Product
 import pl.kostka.restaurantclient.model.enums.OrderStatus
-import pl.kostka.restaurantclient.service.OrderService
+import pl.kostka.restaurantclient.model.enums.OrderType
 
-class OrdersAdapter(val orders: List<Order>, val icons: HashMap<OrderStatus,Int>, val statuses: HashMap<OrderStatus, String>): RecyclerView.Adapter<OrdersViewHolder>() {
+class OrdersAdapter(val orders: List<Order>, val icons: Map<OrderStatus,Int>, val statuses: Map<OrderStatus, String>, val orderTypes: Map<OrderType, String>): RecyclerView.Adapter<OrdersViewHolder>() {
 
     override fun getItemCount(): Int {
         return orders.size
@@ -34,9 +26,19 @@ class OrdersAdapter(val orders: List<Order>, val icons: HashMap<OrderStatus,Int>
             val order = orders.get(position)
         holder.view.textView_orders_status?.text = statuses[order.status]
         holder.view.textView_orders_total_price?.text = String.format("%.2f", order.totalPrice)
-        holder.view.textView_orders_adress?.text = "ul.Testowa 45, Gliwice"
-        holder.view.textView_orders_date?.text = "20.10.2018"
+        holder.view.textView_orders_adress?.text = order.restaurant.getFullAddressString()
+        holder.view.textView_orders_date?.text = order.getDateString()
         holder.view.imageView_orders_status.setImageResource(icons[order.status]!!)
+        holder.view.textView_order_type?.text = orderTypes[order.orderType]
+
+        if(order.orderType == OrderType.DELIVERY && order.deliveryAddress != null){
+            holder.view.textView_orders_delivery_address.visibility = View.VISIBLE
+            holder.view.textView_orders_delivery_address?.text = order.deliveryAddress?.getFullAddressString()
+
+        } else {
+            holder.view.textView_orders_delivery_address.visibility = View.GONE
+
+        }
 
 
 

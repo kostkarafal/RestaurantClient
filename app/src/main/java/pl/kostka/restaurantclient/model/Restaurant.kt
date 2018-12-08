@@ -8,4 +8,10 @@ class Restaurant (val id: Long,
                   val buildingNumber: String,
                   val openHours: String,
                   val latitude: Double,
-                  val longitude: Double)
+                  val longitude: Double) {
+
+    fun getFullAddressString():String {
+        var result = "$name: $street $buildingNumber, $city "
+        return result
+    }
+}

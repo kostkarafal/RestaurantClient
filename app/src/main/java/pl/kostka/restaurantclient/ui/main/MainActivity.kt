@@ -152,6 +152,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_register -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, RegisterFragment()).commit()
             }
+            R.id.nav_license -> {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, LicenseFragment()).commit()
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

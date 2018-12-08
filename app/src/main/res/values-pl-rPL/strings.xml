@@ -74,4 +74,12 @@
     <string name="empty_address_list">Brak adresów</string>
     <string name="no_selected_address">Brak wybranego adresu</string>
     <string name="no_phone_number">Brak numeru telefonu</string>
+    <string name="finished_orders">Zakończone zamówienia</string>
+    <string name="no_orders">Brak zamówień</string>
+    <string name="license_content">"Wszystkie zdjęcia w aplikacji są objete licencją \"creative commons\".  Wiecej informacji na temat zdjęć oraz licencji dostępne pod adresem https://www.pexels.com/ "</string>
+    <string name="license">Licencje</string>
+    <string name="author_credentials">Autor aplikacji: Rafał Kostka</string>
+    <string name="go_to_menu">Przejdź do menu</string>
+    <string name="look_where_is_nearest_restaurant">Zobacz gdzie jest najbliższa restauracja</string>
+    <string name="check_your_orders">Zobacz swoje zamówienia</string>
 </resources>

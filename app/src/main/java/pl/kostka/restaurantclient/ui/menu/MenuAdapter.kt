@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.menu_row.view.*
 import pl.kostka.restaurantclient.BuildConfig
@@ -37,21 +38,19 @@ class MenuAdapter(val menuProducts: List<Product>, val fragment:Fragment): Recyc
             holder.view.textView_productDescription?.text = product.description
             holder.view.textView_priceAmount?.text = String.format("%.2f", product.price)
             val imageView = holder.view.imageView_product
-            Picasso.with(holder.view.context).load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString()).into(imageView)
+            Picasso
+                    .with(holder.view.context)
+                    .load(BuildConfig.HOST_URL + "/downloadFile/" + product.imageId.toString())
+                    .into(imageView, object : Callback{
+                        override fun onSuccess() {
+                            holder.view.progressBar_menu_item.visibility = View.INVISIBLE
+                        }
+
+                        override fun onError() {
+                            holder.view.progressBar_menu_item.visibility = View.INVISIBLE
+                        }
+                    })
             holder.product = product
-
-/*            val spinner: Spinner = holder.view.findViewById(R.id.spinner2)
-            ArrayAdapter.createFromResource(
-                    holder.view.context,
-                    R.array.category_array,
-                    R.layout.my_spinner_item
-            ).also { adapter ->
-                // Specify the layout to use when the list of choices appears
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                // Apply the adapter to the spinner
-                spinner.adapter = adapter
-            }*/
-
     }
 }
 
@@ -63,8 +62,6 @@ class CustomViewHolder(val view: View, val fragment: Fragment, var product: Prod
                 val intent = Intent(view.context, ProductActivity::class.java)
                 intent.putExtra("Product",product)
                 fragment.startActivityForResult(intent, 1)
-                //view.context.startActivity(intent)
-
             }
         }
     }

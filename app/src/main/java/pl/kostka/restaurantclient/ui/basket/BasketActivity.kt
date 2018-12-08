@@ -62,7 +62,7 @@ class BasketActivity : AppCompatActivity() {
             if(deliveryAddress != null) {
                 textView_basket_title.text = deliveryAddress!!.title
             } else {
-                getDeliveryAddress()
+                getDeliveryAddress(progressBar_basket)
             }
         }
 
@@ -74,7 +74,7 @@ class BasketActivity : AppCompatActivity() {
             if(selectedRestaurant != null) {
                 textView_basket_title.text = selectedRestaurant!!.name
             } else {
-                getRestaurantAddress()
+                getRestaurantAddress(progressBar_basket)
             }
         }
 
@@ -140,11 +140,13 @@ class BasketActivity : AppCompatActivity() {
         }
     }
 
-    private fun getDeliveryAddress() {
+    private fun getDeliveryAddress(progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
         UserService.getSelectedAddress(object : AddressCallback{
             override fun onResponse(response: Address) {
                 deliveryAddress = response
                 runOnUiThread {
+                    progressBar.visibility = View.INVISIBLE
                     radioButton_basket_self_pickup.isChecked = false
                     textView_basket_title.text = response.title
                 }
@@ -152,6 +154,7 @@ class BasketActivity : AppCompatActivity() {
 
             override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
+                    progressBar.visibility = View.INVISIBLE
                     if(error.status == 406) {
                         val intent = Intent(this@BasketActivity, AddressActivity::class.java)
                         startActivityForResult(intent, 1)
@@ -164,11 +167,14 @@ class BasketActivity : AppCompatActivity() {
 
     }
 
-    private fun getRestaurantAddress() {
+    private fun getRestaurantAddress(progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
+
         UserService.getSelectedRestaurant(object : RestaurantCallback{
             override fun onResponse(response: Restaurant) {
                 selectedRestaurant = response
                 runOnUiThread {
+                    progressBar.visibility = View.INVISIBLE
                     radioButton_basket_delivery.isChecked = false
                     textView_basket_title.text = response.name
                 }
@@ -176,6 +182,7 @@ class BasketActivity : AppCompatActivity() {
 
             override fun onFailure(error: ErrorResponse) {
                 runOnUiThread {
+                    progressBar.visibility = View.INVISIBLE
                     if(error.status == 406) {
                         val intent = Intent(this@BasketActivity, RestaurantActivity::class.java)
                         startActivityForResult(intent, 2)
@@ -193,13 +200,13 @@ class BasketActivity : AppCompatActivity() {
 
         if(requestCode == 1){
             if(resultCode == Activity.RESULT_OK){
-                getDeliveryAddress()
+                getDeliveryAddress(progressBar_basket)
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 radioButton_basket_delivery.isChecked = false
             }
         } else if (requestCode == 2){
             if(resultCode == Activity.RESULT_OK){
-                getRestaurantAddress()
+                getRestaurantAddress(progressBar_basket)
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 radioButton_basket_self_pickup.isChecked = false
             }

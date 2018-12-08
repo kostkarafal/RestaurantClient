@@ -42,6 +42,10 @@
                 android:id="@+id/nav_log_out"
                 android:icon="@drawable/ic_logout_24dp"
                 android:title="@string/log_out" />
+            <item
+                android:id="@+id/nav_license"
+                android:icon="@drawable/ic_assignment_black_24dp"
+                android:title="@string/license" />
         </menu>
     </item>
 </menu>

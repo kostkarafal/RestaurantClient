@@ -95,19 +95,19 @@ class NewAddressActivity : AppCompatActivity() {
 
 
 
-        city!!.setOnFocusChangeListener { v, hasFocus ->
+        city!!.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus && editText_address_city.text!!.isNotEmpty()) {
               updateMap()
             }
         }
 
-       street!!.setOnFocusChangeListener { v, hasFocus ->
+       street!!.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus && editText_address_street.text!!.isNotEmpty()) {
                 updateMap()
             }
         }
 
-        building!!.setOnFocusChangeListener { v, hasFocus ->
+        building!!.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus && editText_address_building.text!!.isNotEmpty()) {
                 updateMap()
             }
@@ -122,7 +122,7 @@ class NewAddressActivity : AppCompatActivity() {
                 }
                 if(editMode) {
                     AddressService.updateAddress(address, object : AddressCallback {
-                        override fun onResponse(address: Address) {
+                        override fun onResponse(response: Address) {
                             runOnUiThread {
                                 this@NewAddressActivity.setResult(Activity.RESULT_OK)
                                 this@NewAddressActivity.finish()
@@ -137,7 +137,7 @@ class NewAddressActivity : AppCompatActivity() {
                     })
                 } else {
                     AddressService.addAddress(address, object : AddressCallback {
-                        override fun onResponse(address: Address) {
+                        override fun onResponse(response: Address) {
                             runOnUiThread {
                                 this@NewAddressActivity.setResult(Activity.RESULT_OK)
                                 this@NewAddressActivity.finish()
