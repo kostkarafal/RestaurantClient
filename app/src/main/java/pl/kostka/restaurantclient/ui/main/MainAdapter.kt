@@ -22,7 +22,7 @@ class MainAdapter(val homeElements: List<HomeElement>,val fragmentManager: Fragm
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.main_row_outside, parent, false)
-        return MainViewHolder(cellForRow, fragmentManager)
+        return MainViewHolder(cellForRow)
 
     }
 
@@ -32,19 +32,15 @@ class MainAdapter(val homeElements: List<HomeElement>,val fragmentManager: Fragm
         holder.view.textView_main_description?.text = homeElement.description
         holder.view.imageView_main_icon.setImageResource(homeElement.iconResId!!.toInt())
         holder.view.imageView_main_image.setImageResource(homeElement.imageResId!!.toInt())
-    }
-}
 
-class MainViewHolder(val view: View, val fragmentManager: FragmentManager): RecyclerView.ViewHolder(view) {
-
-    init {
-        view.setOnClickListener {
-
-            when(view.textView_main_name.text) {
-                "Menu" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
-                "Restaurants" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, RestaurantsFragment()).commit()
-                "Orders" -> fragmentManager.beginTransaction().replace(R.id.fragment_container, OrdersFragment()).commit()
+        holder.view.setOnClickListener {
+            when(position) {
+                0 -> fragmentManager.beginTransaction().replace(R.id.fragment_container, MenuFragment()).commit()
+                1 -> fragmentManager.beginTransaction().replace(R.id.fragment_container, RestaurantsFragment()).commit()
+                2 -> fragmentManager.beginTransaction().replace(R.id.fragment_container, OrdersFragment()).commit()
             }
         }
     }
 }
+
+class MainViewHolder(val view: View): RecyclerView.ViewHolder(view)

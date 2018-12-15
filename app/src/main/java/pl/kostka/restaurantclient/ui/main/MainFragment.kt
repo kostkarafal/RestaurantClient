@@ -26,7 +26,8 @@ class MainFragment: Fragment(){
         for(i in 0..homeElements.size - 1) {
             val iconId = resources.getIdentifier("@drawable/" + homeElementsIcons[i], "drawable", view.context.packageName)
             val imgId = resources.getIdentifier("@drawable/"+ homeElementsImages[i], "drawable", view.context.packageName)
-            val element = HomeElement(name = homeElements[i],
+            val element = HomeElement( id = i,
+                                    name = homeElements[i],
                                     description = homeElementsDescription[i],
                                     iconResId = iconId,
                                     imageResId = imgId)
